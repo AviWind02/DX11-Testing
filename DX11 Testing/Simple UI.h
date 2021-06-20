@@ -1,6 +1,16 @@
 #pragma once
 namespace Simple_UI
 {
+	/*
+	-2021/06/20(1:35am)-
+	* Maybe Keep RGB bar on at all times
+	  and when clicked it'll Open : close the menu
+	  also allowing users to change its colour would be nice 
+	  but yes RGB bar should be the open button and to make it work i need to 
+	  the same method i used in Normal Menu for Option clicking, that should do it yes.
+	* Look into to simple icon or something like lolicon or keep the main menu the same menu right now
+	  If not then i could make the menu go up into the window or keep the side, keeping the side is the best thing tbh.
+	*/
 	class SimpleUI {
 	private:
 
