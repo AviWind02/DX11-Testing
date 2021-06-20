@@ -2,12 +2,16 @@
 
 class UI {
 public:
-    const int maxOption = 14;
+    const int maxOption = 27;
     int OptionCount;
-    int currentOption;
+    int currentOption = 1;
     int RGBFadeRed = 255, RGBFadeGreen = 0, RGBFadeBlue = 0;
-    ImVec4 RGBFade()
+    int frametimeRGB;
+    ImVec4 RGBFade(int Delay = 5)
     {
+        if ((timeGetTime() - frametimeRGB) > Delay)
+        {
+      
         if (RGBFadeRed > 0 && RGBFadeBlue == 0) {
             RGBFadeRed--;
             RGBFadeGreen++;
@@ -19,6 +23,8 @@ public:
         if (RGBFadeBlue > 0 && RGBFadeGreen == 0) {
             RGBFadeRed++;
             RGBFadeBlue--;
+        }
+            frametimeRGB = timeGetTime();
         }
         return ImColor(RGBFadeRed, RGBFadeGreen, RGBFadeBlue, 255);
     }
