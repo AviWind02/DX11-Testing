@@ -96,7 +96,8 @@ int main()
             ImGui::ShowDemoWindow(&show_demo_window);
 
 
-        Normal_UI::NormalMenu->Tick();
+        //Normal_UI::NormalMenu->Tick();
+        Simple_UI::SimpleMenu->Tick();
         // Rendering
         ImGui::Render();
         g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, NULL);

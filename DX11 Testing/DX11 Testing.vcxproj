@@ -220,6 +220,9 @@
     <ClInclude Include="IncludeFiles.h" />
     <ClInclude Include="Normal Menu.h" />
     <ClInclude Include="Normal UI.h" />
+    <ClInclude Include="Simple Menu.h" />
+    <ClInclude Include="Simple UI.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

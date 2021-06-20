@@ -18,6 +18,9 @@
     <Filter Include="Header Files\TestLand\Normal">
       <UniqueIdentifier>{e288cece-c393-47d2-80ea-620882f23cdb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\TestLand\Simple">
+      <UniqueIdentifier>{d7334ebf-1eee-4fb9-89a4-8b9db99c6003}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -75,6 +78,15 @@
     </ClInclude>
     <ClInclude Include="Normal Menu.h">
       <Filter>Header Files\TestLand\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="Simple Menu.h">
+      <Filter>Header Files\TestLand\Simple</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Header Files\TestLand</Filter>
+    </ClInclude>
+    <ClInclude Include="Simple UI.h">
+      <Filter>Header Files\TestLand\Simple</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

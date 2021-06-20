@@ -14,7 +14,19 @@
 #include <iostream>
 #include <Windows.h>
 #include <consoleapi.h>
-
+#include <timeapi.h>
+#include <time.h>
+#pragma comment(lib, "secur32.lib")
+#pragma comment(lib, "winmm.lib")
+#pragma comment(lib, "dmoguids.lib")
+#pragma comment(lib, "wmcodecdspuuid.lib")
+#pragma comment(lib, "msdmo.lib")
+#pragma comment(lib, "Strmiids.lib")
 //Menu Stuff
+#include "UI.h"
+
 #include "Normal UI.h"
 #include "Normal Menu.h"
+
+#include "Simple Menu.h"
+#include "Simple UI.h"
