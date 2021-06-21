@@ -248,6 +248,11 @@ public:
         ImGui::GetCurrentWindow()->DrawList->AddText({ Pos.x , Pos.y }, ImGui::GetColorU32(Colour), Text.c_str());
         ImGui::PopFont();
     }
+    float getRightTextX(std::string Text, float Pos)
+    {
+        return (ImGui::GetColumnWidth() - ImGui::CalcTextSize(StringToChar(Text)).x
+            - ImGui::GetScrollX() - 2 * ImGui::GetStyle().ItemSpacing.x + Pos);
+    }
     void RectFilled(ImVec4 Colour, ImVec2 Pos, ImVec2 Size, bool Filled = true)
     {
         ImVec2 size = ImGui::CalcItemSize(ImVec2(Size.x, Size.y), 0.0f, 0.0f);

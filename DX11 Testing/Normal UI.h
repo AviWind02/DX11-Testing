@@ -15,7 +15,13 @@ namespace  Normal_UI
     public:
 
 
-
+        bool MouseClick(const char* text, ImVec2 pos, ImVec2 size, bool* out_hovered, bool* out_held)
+        {
+            ImGuiWindow* window = ImGui::GetCurrentWindow();
+            const ImGuiID id = window->GetID(text);
+            const ImRect bb(ImVec2(pos.x, pos.y), Ui->add(&ImVec2(pos.x, pos.y), &size));
+            return ImGui::ButtonBehavior(bb, id, out_hovered, out_held);
+        }
         bool Option(const char* text)
         {
             Ui->OptionCount++;

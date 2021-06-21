@@ -18,11 +18,23 @@ namespace Simple_UI
 		int Closedstate, Openstate = 325, Pushstate = 10;
 		int MenuWidth, MenuHight = 720;
 		bool OpenMenu = true;
-		
+		bool MouseClick(const char* text, ImVec2 pos, ImVec2 size, bool* out_hovered, bool* out_held)
+		{
+			ImGuiWindow* window = ImGui::GetCurrentWindow();
+			const ImGuiID id = window->GetID(text);
+			const ImRect bb(ImVec2(pos.x, pos.y), Ui->add(&ImVec2(pos.x, pos.y), &size));
+			return ImGui::ButtonBehavior(bb, id, out_hovered, out_held);
+		}
+		void test()
+		{
+			bool one, two;
+			if (MouseClick("RGB BAR", { 0, 0 }, { 7.0f, (float)MenuHight }, &one, &two))
+				OpenMenu = !OpenMenu;
+		}
 		void SideLineRGB(float Hight)
 		{
 			
-			Ui->Line(Ui->RGBFade(), ImVec2(0, 0), ImVec2(0, Hight), 7.0f);
+			Ui->Line(Ui->RGBFade(), ImVec2(0, 0), ImVec2(0, Hight), OpenMenu ? 7.f : 12.f);
 		}
 		void BackGround()
 		{
@@ -59,11 +71,14 @@ namespace Simple_UI
 		{
 			Ui->OptionCount++;
 			bool Hover = Ui->currentOption == Ui->OptionCount ? true : false;
+			bool one, two, pressed = false;
+
 			if (Ui->currentOption <= Ui->maxOption && Ui->OptionCount <= Ui->maxOption)
 			{
 				float YPostion = 25.f * Ui->OptionCount + 5.f;
 				ImVec2 TextPos{ ImGui::GetCursorScreenPos().x - 4.f, YPostion };
-				PlaceOptionText(TextPos, Hover, text, Rtext);
+				pressed = MouseClick(Ui->StringToChar(text), TextPos, { ((float)MenuWidth - 25.f), 25.f }, &one, &two);
+				PlaceOptionText(TextPos, one, text, Rtext);
 			}
 			else if (Ui->OptionCount > (Ui->currentOption - Ui->maxOption) && Ui->OptionCount <= Ui->currentOption)
 			{
@@ -72,7 +87,7 @@ namespace Simple_UI
 				PlaceOptionText(TextPos, Hover, text, Rtext);
 			}
 
-			if (Hover && Ui->SelectPressed)
+			if (pressed)
 				return true;
 			return false;
 		}
@@ -84,25 +99,45 @@ namespace Simple_UI
 		}
 		bool Option(std::string text)
 		{
-			return Option(text, "");
+			if(OpenMenu)
+				return Option(text, "");
+		}
+		bool Int(std::string text, int& Main, int min, int max, int step)
+		{
+			std::string NumberMain = std::to_string(Main);
+			std::string NumberMax = std::to_string(max);
+			std::string NumberCombo = NumberMain + "/" + NumberMax;
+			std::string ShowNumber = "< " + NumberCombo + " >";
+			if (Option(text, ShowNumber))
+			{
+				IsKeyDown(VK_CONTROL) ? Main >= min ? Main -= step : Main = max
+					: Main < max ? Main += step : Main = min;
+				return true;
+			}
+			return false;
 		}
 		void End(std::string SubTitle)
 		{
-			std::string Count = Ui->StringToChar(std::to_string(Ui->currentOption) + "/" + std::to_string(Ui->OptionCount));
-			ImVec2 TextPos{ (ImGui::GetCursorScreenPos().x + 6.f), ((float)MenuHight - 15) };
-			Ui->Text(Count, Ui->TextOnNomral, TextPos, NULL, true);
-			Ui->Text("V1 | " + SubTitle, Ui->TextOnNomral, TextPos);
+			if (OpenMenu)
+			{
+				std::string Count = Ui->StringToChar(std::to_string(Ui->currentOption) + "/" + std::to_string(Ui->OptionCount));
+				ImVec2 TextPos{ (ImGui::GetCursorScreenPos().x + 6.f), ((float)MenuHight - 15) };
+				Ui->Text(Count, Ui->TextOnNomral, TextPos, NULL, true);
+				Ui->Text("V1 | " + SubTitle, Ui->TextOnNomral, TextPos);
+			}
 		}
 		void Backpart()
 		{
 			EnlargeMenu();
 			BackGround();
 			SideLineRGB(MenuHight);
-
+			test();
 		}
+		int testInt = 100;
 		void TestOption10()
 		{
-			Option("Option One");
+			if (Option("Option One")) std::cout << "Test one\n";
+			if (Int("int Option one", testInt, -10, 1000, 2)) std::cout << "Deez NUTS\n";
 			Option("Option Two");
 			Option("Option Three");
 			Option("Option Four");
