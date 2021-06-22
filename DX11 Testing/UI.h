@@ -4,7 +4,7 @@ class UI {
 public:
     const int maxOption = 27;
     int OptionCount;
-    int currentOption = 1;
+    int currentOption;
     int RGBFadeRed = 255, RGBFadeGreen = 0, RGBFadeBlue = 0;
     int frametimeRGB;
     ImVec4 RGBFade(int Delay = 5)
@@ -82,6 +82,19 @@ public:
 
         return false;
     }
+    bool ScrollUp()
+    {
+
+        if (ImGui::GetIO().MouseWheel == 1)
+            return true;
+        return false;
+    }
+    bool ScrollDown()
+    {
+        if (ImGui::GetIO().MouseWheel == -1)
+            return true;
+        return false;
+    }
     bool DownKey()
     {
         if (GetAsyncKeyState(VK_DOWN))
@@ -140,11 +153,33 @@ public:
 
         return result;
     }
+  
+    bool LockOnHoldForNumChange;
     void control()
     {
         RightPressed = false;
         LeftPressed = false;
         SelectPressed = false;
+        if (!LockOnHoldForNumChange)
+        {
+            if (GetTickCount() - KeyPressDelayTickCount > 50)
+            {
+
+                if (ScrollUp())
+                {
+                    currentOption > 1 ? currentOption-- : currentOption = OptionCount;
+                    KeyPressDelayTickCount = GetTickCount();
+                }
+                else  if (ScrollDown())
+                {
+
+                    currentOption < OptionCount ? currentOption++ : currentOption = 1;
+                    KeyPressDelayTickCount = GetTickCount();
+
+                }
+            }
+        }
+    
         if (GetTickCount() - KeyPressDelayTickCount > KeyPressDelay)
         {
             if (OpenKey())
@@ -248,9 +283,9 @@ public:
         ImGui::GetCurrentWindow()->DrawList->AddText({ Pos.x , Pos.y }, ImGui::GetColorU32(Colour), Text.c_str());
         ImGui::PopFont();
     }
-    float getRightTextX(std::string Text, float Pos)
+    float getRightTextX(float Pos)
     {
-        return (ImGui::GetColumnWidth() - ImGui::CalcTextSize(StringToChar(Text)).x
+        return (ImGui::GetColumnWidth() - ImGui::CalcTextSize(StringToChar("Right")).x
             - ImGui::GetScrollX() - 2 * ImGui::GetStyle().ItemSpacing.x + Pos);
     }
     void RectFilled(ImVec4 Colour, ImVec2 Pos, ImVec2 Size, bool Filled = true)
