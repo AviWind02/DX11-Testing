@@ -1,21 +1,7 @@
 #pragma once
+#pragma warning(disable : 4996)
 namespace Simple_UI
 {
-	/*
-	-2021/06/20(1:35am)-
-	* Maybe Keep RGB bar on at all times
-	  and when clicked it'll Open : close the menu
-	  also allowing users to change its colour would be nice 
-	  but yes RGB bar should be the open button and to make it work i need to 
-	  the same method i used in Normal Menu for Option clicking, that should do it yes.
-	* Look into to simple icon or something like lolicon or keep the main menu the same menu right now
-	  If not then i could make the menu go up into the window or keep the side, keeping the side is the best thing tbh.
-	  -2021/06/21(11:57pm)-
-	* added a few new things today
-	  added a function to check if mouse is held or hovering
-	  added it so user can hold and open and scroll change its int
-	  going for a more friendly way where user can use controller and mouse for all.
-	*/
 	class SimpleUI {
 	private:
 
@@ -23,6 +9,12 @@ namespace Simple_UI
 		int Closedstate, Openstate = 325, Pushstate = 10;
 		int MenuWidth, MenuHight = 720;
 		bool OpenMenu = true;
+		std::string FloatPoint(float Float, const char* format = "%.4g")
+		{
+			char NameBuffer[50];
+			sprintf(NameBuffer, format, Float);
+			return (std::string)NameBuffer;
+		}
 		bool MouseClick(const char* text, ImVec2 pos, ImVec2 size, bool* out_hovered, bool* out_held)
 		{
 			ImGuiWindow* window = ImGui::GetCurrentWindow();
@@ -165,24 +157,22 @@ namespace Simple_UI
 			std::string ShowNumber = "[" + NumberCombo + "]";
 			if (Option(text, ShowNumber)) return true;
 			MouseClickOption(text, NULL, &Held);
-			Held&& Ui->ScrollUp() || Ui->RightPressed && Ui->currentOption == Ui->OptionCount ?  Main >= min ? Main -= step : Main = max : NULL;
-			Held&& Ui->ScrollDown() || Ui->LeftPressed && Ui->currentOption == Ui->OptionCount ? Main < max ? Main += step : Main = min : NULL;
-			Ui->LockOnHoldForNumChange = Held;
+			Held && Ui->ScrollUp() || Ui->RightPressed && Ui->currentOption == Ui->OptionCount ? Main < max ? Main += step : Main = min : NULL;
+			Held && Ui->ScrollDown() || Ui->LeftPressed && Ui->currentOption == Ui->OptionCount ? Main >= min ? Main -= step : Main = max : NULL;
 			return false;
 
 		}
 		bool Float(std::string text, float& Main, float min, float max, float step)
 		{
 			bool Held;
-			std::string NumberMain = std::to_string(Main);
-			std::string NumberMax = std::to_string(max);
-			std::string NumberCombo = NumberMain + "/" + NumberMax;
+			std::string NumberMain = FloatPoint(Main);
+			std::string NumberMax = FloatPoint(max);
+			std::string NumberCombo = NumberMain+"f" + "/" + NumberMax + "f";
 			std::string ShowNumber = "[" + NumberCombo + "]";
 			if (Option(text, ShowNumber)) return true;
 			MouseClickOption(text, NULL, &Held);
-			Held&& Ui->ScrollUp() || Ui->RightPressed && Ui->currentOption == Ui->OptionCount ? Main >= min ? Main -= step : Main = max : NULL;
-			Held&& Ui->ScrollDown() || Ui->LeftPressed && Ui->currentOption == Ui->OptionCount ? Main < max ? Main += step : Main = min : NULL;
-			Ui->LockOnHoldForNumChange = Held;
+			Held&& Ui->ScrollUp() || Ui->RightPressed && Ui->currentOption == Ui->OptionCount ? Main < max ? Main += step : Main = min : NULL;
+			Held&& Ui->ScrollDown() || Ui->LeftPressed && Ui->currentOption == Ui->OptionCount ? Main >= min ? Main -= step : Main = max : NULL;
 			return false;
 
 		}
@@ -204,14 +194,13 @@ namespace Simple_UI
 			OpenKey();
 		}
 		int testInt = 100;
-		float testFloat = 100.f;
+		float testFloat = 99.99f;
 
 		void TestOption10()
 		{
 			if (Option("Option 1")) std::cout << "Test one\n";
 			if (Int("int", testInt, -10, 1000, 2)) std::cout << "Deez NUTS\n";
-			if (Float("Float", testFloat, -10.f, 1000.f, 2.f)) std::cout << "Deez NUTS oui\n";
-
+			if (Float("Float", testFloat, -10.f, 99.99f, 2.f)) std::cout << "Deez NUTS oui\n";
 			if (BreakText("Break Text")) std::cout << "zlex = gay?\n";
 			Option("Option 2");
 			Option("Option 3");

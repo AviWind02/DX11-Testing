@@ -157,6 +157,7 @@ public:
     bool LockOnHoldForNumChange;
     void control()
     {
+        IsKeyDown(VK_CONTROL) ? LockOnHoldForNumChange = true : false;
         RightPressed = false;
         LeftPressed = false;
         SelectPressed = false;

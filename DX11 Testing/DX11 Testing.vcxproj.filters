@@ -89,4 +89,7 @@
       <Filter>Header Files\TestLand\Simple</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Notes.txt" />
+  </ItemGroup>
 </Project>
