@@ -176,8 +176,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>Default</ConformanceMode>
-      <LanguageStandard>Default</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -201,10 +200,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Aston.cpp" />
-    <ClCompile Include="Blue.cpp" />
-    <ClCompile Include="BluesUI.cpp" />
-    <ClCompile Include="Control.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
@@ -214,10 +209,6 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Blue.h" />
-    <ClInclude Include="BluesUI.h" />
-    <ClInclude Include="Control.h" />
-    <ClInclude Include="Font.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_dx11.h" />
@@ -227,14 +218,10 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="IncludeFiles.h" />
-    <ClInclude Include="Functions.h" />
-    <ClInclude Include="NewUI\Menu.h" />
-    <ClInclude Include="NewUI\UI.h" />
     <ClInclude Include="Normal Menu.h" />
     <ClInclude Include="Normal UI.h" />
     <ClInclude Include="Simple Menu.h" />
     <ClInclude Include="Simple UI.h" />
-    <ClInclude Include="stb_image.h" />
     <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>

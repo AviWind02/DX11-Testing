@@ -15,11 +15,35 @@
     <Filter Include="Header Files\TestLand">
       <UniqueIdentifier>{8c6dc5fa-4113-429b-aa19-c4ebcd5b3ca5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\TestLand\Normal">
+    <Filter Include="Header Files\TestLand\BlueMenu">
+      <UniqueIdentifier>{486afbad-5da2-4091-8770-e8f2e3af1280}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestLand\Not Working on">
+      <UniqueIdentifier>{c36498ad-585d-402b-bda3-d842f35bfa8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestLand\Not Working on\Broken UI need to fix idk when">
+      <UniqueIdentifier>{3c4fade2-592c-42f2-a96d-7eaabe1da79b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestLand\Not Working on\Broken UI need to fix idk when\New UI">
+      <UniqueIdentifier>{9a79aacb-5c5a-459c-867c-75d6bccf8114}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestLand\Not Working on\Broken UI need to fix idk when\Normal">
       <UniqueIdentifier>{e288cece-c393-47d2-80ea-620882f23cdb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\TestLand\Simple">
+    <Filter Include="Header Files\TestLand\Not Working on\Broken UI need to fix idk when\Simple">
       <UniqueIdentifier>{d7334ebf-1eee-4fb9-89a4-8b9db99c6003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestLand\Not Working on\SouthsUI">
+      <UniqueIdentifier>{77a24a45-170e-4952-8dc4-295b6eba194f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestLand\Control">
+      <UniqueIdentifier>{b3f2f8d9-005d-469c-849f-709136941701}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Misc">
+      <UniqueIdentifier>{91f3bb69-8e19-4bff-a288-056db2c0e361}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestLand\BlueMenu\Backend">
+      <UniqueIdentifier>{2616d525-551f-4609-adfe-33c84723b9f1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -44,11 +68,20 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Aston.cpp">
+      <Filter>Header Files\TestLand\Not Working on\SouthsUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Blue.cpp">
+      <Filter>Header Files\TestLand\BlueMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="Control.cpp">
+      <Filter>Header Files\TestLand\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="BluesUI.cpp">
+      <Filter>Header Files\TestLand\BlueMenu\Backend</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IncludeFiles.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
       <Filter>ImGui</Filter>
     </ClInclude>
@@ -73,20 +106,47 @@
     <ClInclude Include="ImGui\imstb_truetype.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Normal UI.h">
-      <Filter>Header Files\TestLand\Normal</Filter>
+    <ClInclude Include="IncludeFiles.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\Menu.h">
+      <Filter>Header Files\TestLand\Not Working on\Broken UI need to fix idk when\New UI</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\UI.h">
+      <Filter>Header Files\TestLand\Not Working on\Broken UI need to fix idk when\New UI</Filter>
     </ClInclude>
     <ClInclude Include="Normal Menu.h">
-      <Filter>Header Files\TestLand\Normal</Filter>
+      <Filter>Header Files\TestLand\Not Working on\Broken UI need to fix idk when\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="Normal UI.h">
+      <Filter>Header Files\TestLand\Not Working on\Broken UI need to fix idk when\Normal</Filter>
     </ClInclude>
     <ClInclude Include="Simple Menu.h">
-      <Filter>Header Files\TestLand\Simple</Filter>
-    </ClInclude>
-    <ClInclude Include="UI.h">
-      <Filter>Header Files\TestLand</Filter>
+      <Filter>Header Files\TestLand\Not Working on\Broken UI need to fix idk when\Simple</Filter>
     </ClInclude>
     <ClInclude Include="Simple UI.h">
-      <Filter>Header Files\TestLand\Simple</Filter>
+      <Filter>Header Files\TestLand\Not Working on\Broken UI need to fix idk when\Simple</Filter>
+    </ClInclude>
+    <ClInclude Include="Blue.h">
+      <Filter>Header Files\TestLand\BlueMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Header Files\TestLand\Not Working on\Broken UI need to fix idk when</Filter>
+    </ClInclude>
+    <ClInclude Include="Control.h">
+      <Filter>Header Files\TestLand\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="BluesUI.h">
+      <Filter>Header Files\TestLand\BlueMenu\Backend</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

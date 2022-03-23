@@ -1,7 +1,5 @@
 #include "IncludeFiles.h"
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-#include "BluesUI.h"
+
 
 // Data
 static ID3D11Device* g_pd3dDevice = NULL;
@@ -15,77 +13,10 @@ void CleanupDeviceD3D();
 void CreateRenderTarget();
 void CleanupRenderTarget();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-bool LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height)
-{
-    // Load from disk into a raw RGBA buffer
-    int image_width = 0;
-    int image_height = 0;
-    unsigned char* image_data = stbi_load(filename, &image_width, &image_height, NULL, 4);
-    if (image_data == NULL)
-        return false;
 
-    // Create texture
-    D3D11_TEXTURE2D_DESC desc;
-    ZeroMemory(&desc, sizeof(desc));
-    desc.Width = image_width;
-    desc.Height = image_height;
-    desc.MipLevels = 1;
-    desc.ArraySize = 1;
-    desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    desc.SampleDesc.Count = 1;
-    desc.Usage = D3D11_USAGE_DEFAULT;
-    desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-    desc.CPUAccessFlags = 0;
-
-    ID3D11Texture2D* pTexture = NULL;
-    D3D11_SUBRESOURCE_DATA subResource;
-    subResource.pSysMem = image_data;
-    subResource.SysMemPitch = desc.Width * 4;
-    subResource.SysMemSlicePitch = 0;
-    g_pd3dDevice->CreateTexture2D(&desc, &subResource, &pTexture);
-
-    // Create texture view
-    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-    ZeroMemory(&srvDesc, sizeof(srvDesc));
-    srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MipLevels = desc.MipLevels;
-    srvDesc.Texture2D.MostDetailedMip = 0;
-    g_pd3dDevice->CreateShaderResourceView(pTexture, &srvDesc, out_srv);
-    pTexture->Release();
-
-    *out_width = image_width;
-    *out_height = image_height;
-    stbi_image_free(image_data);
-
-    return true;
-}
-
-void Loadimage(const char* ID, const char* FilePath, ImVec2 Pos, ImVec2 Size, ImVec2 Sizep)
-{
-    int my_image_width = 0;
-    int my_image_height = 0;
-    ID3D11ShaderResourceView* my_texture = NULL;
-    bool ret = LoadTextureFromFile(FilePath, &my_texture, &my_image_width, &my_image_height);
-    IM_ASSERT(ret);
-
-    ImGui::SetNextWindowPos(Pos);
-    ImGui::SetNextWindowSize(Size);
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
-    if (ImGui::Begin(ID, 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove  | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
-    {
-   
-        ImGui::Image((void*)my_texture, Sizep);
-    }
-    ImGui::PopStyleVar();
-    ImGui::PopStyleColor();
-    ImGui::End();
-}
-//extern void AstonTick();
 int main()
 {
-    std::cout << "Starting.." << std::endl;
+    std::cout << "Starting..";
 
     // Create application window
     //ImGui_ImplWin32_EnableDpiAwareness();
@@ -120,7 +51,6 @@ int main()
     ImGui_ImplWin32_Init(hwnd);
     ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
 
-    //font->LoadFonts();
 
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
@@ -136,8 +66,9 @@ int main()
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
+
     // Our state
-    bool show_demo_window = true;
+    bool show_demo_window = false;
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -168,21 +99,16 @@ int main()
             ImGui::ShowDemoWindow(&show_demo_window);
 
 
-        //Normal_UI::NormalMenu->Tick();
+        Normal_UI::NormalMenu->Tick();
         //Simple_UI::SimpleMenu->Tick();
-        //TopUI::MenuUI->Tick();
-        //input->Tick();
-        //AstonTick();
-        blueUI->tick();
-
         // Rendering
         ImGui::Render();
         g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, NULL);
         g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, (float*)&clear_color);
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
         g_pSwapChain->Present(1, 0); // Present with vsync
         //g_pSwapChain->Present(0, 0); // Present without vsync
-        
     }
 
     // Cleanup

@@ -13,6 +13,4442 @@
 	going for a more friendly way where user can use controller and mouse for all.
 	-2021/06/22(6:18pm)--------
 * so controls for this menu are gonna be 
-  Mouse : Mouse scoll wheel
-  Arrow keys : Num Pad : Backspace & enter 
-  Game controller
+  Mouse : Mouse scoll wheel Added
+  Arrow keys : Num Pad : Backspace & enter : control key to lock mouse Added
+  Game controller to add
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Extra:
+
+  #include "common.hpp"
+#include "MenuFunctions.hpp"
+#include <imgui.h>
+#include <imgui_internal.h>
+#include <d3d11.h>
+#include <renderer.hpp>
+#include <script_global.hpp>
+
+
+char* Custom(int modType)
+{
+	switch (modType) 
+	{
+	case VehicleMod::Spoiler: return "Spoiler"; break;
+	case VehicleMod::FrontBumper: return "Front Bumper"; break;
+	case VehicleMod::RearBumper: return "Rear Bumper"; break;
+	case VehicleMod::SideSkirt: return "Side Skirt"; break;
+	case VehicleMod::Exhaust: return "Exhaust"; break;
+	case VehicleMod::Frame: return "Frame"; break;
+	case VehicleMod::Grille: return "Grille"; break;
+	case VehicleMod::Hood: return "Hood"; break;
+	case VehicleMod::Fender: return "Fender"; break;
+	case VehicleMod::RightFender: return "Right Fender"; break;
+	case VehicleMod::Roof: return "Roof"; break;
+	case VehicleMod::Engine: return "Engine"; break;
+	case VehicleMod::Brakes: return "Brakes"; break;
+	case VehicleMod::Transmission: return "Transmission"; break;
+	case VehicleMod::Horns: return "Horns"; break;
+	case VehicleMod::Suspension: return "Suspension"; break;
+	case VehicleMod::Armor: return "Armor"; break;
+	case VehicleMod::Unknown17: return "Unknown17"; break;
+	case VehicleMod::Turbo: return "Turbo"; break;
+	case VehicleMod::Unknown19: return "Unknown19"; break;
+	case VehicleMod::TireSmoke: return "Tire Smoke"; break;
+	case VehicleMod::Unknown21: return "Unknown21"; break;
+	case VehicleMod::XenonHeadlights: return "Xenon Head-lights"; break;
+	case VehicleMod::FrontWheels: return "Front Wheels"; break;
+	case VehicleMod::BackWheels: return "Back Wheels"; break;
+	case VehicleMod::Plateholder: return "Plate holder"; break;
+	case VehicleMod::VanityPlate: return "Vanity Plate"; break;
+	case VehicleMod::TrimDesign: return "Trim Design"; break;
+	case VehicleMod::Ornament: return "Ornament"; break;
+	case VehicleMod::Dash: return "Dash"; break;
+	case VehicleMod::DialDesign: return "Dial Design"; break;
+	case VehicleMod::SpeakersDoor: return "Speakers Door"; break;
+	case VehicleMod::LeatherSeats: return "Leather Seats"; break;
+	case VehicleMod::SteeringWheel: return "Steering Wheel"; break;
+	case VehicleMod::ColumnShifterLever: return "Column Shifter Lever"; break;
+	case VehicleMod::Plaque: return "Plaque"; break;
+	case VehicleMod::Speakers: return "Speakers"; break;
+	case VehicleMod::Trunk: return "Trunk"; break;
+	case VehicleMod::Hydraulics: return "Hydraulics"; break;
+	case VehicleMod::EngineBlock: return "Engine Block"; break;
+	case VehicleMod::AirFilter: return "Air-Filter"; break;
+	case VehicleMod::Struts: return "Struts"; break;
+	case VehicleMod::ArchCover: return "ArchCover"; break;
+	case VehicleMod::Aerials: return "Aerials"; break;
+	case VehicleMod::Trim: return "Trim"; break;
+	case VehicleMod::Tank: return "Tank"; break;
+	case VehicleMod::Windows: return "Windows"; break;
+	case VehicleMod::Unknown47: return "Unknown47"; break;
+	case VehicleMod::Livery: return "Livery"; break;
+
+	}
+}
+int Mods()
+{
+	return VehicleMod::FrontWheels;
+	return VehicleMod::Horns;
+}
+int Selectedmod;
+void VehicleCustomsMain()
+{
+	Vehicle vehicle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
+
+	for (int i = 0; i < 47; i++)
+	{
+		if (VEHICLE::GET_NUM_VEHICLE_MODS(vehicle, i) > 0)
+			if(i != Mods())
+				SubMenuOption(Custom(i), SelectedModIndexSub) ? Selectedmod = i : NULL;
+	}
+}
+void SelectedVehicleMod()
+{
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	char nummods = VEHICLE::GET_NUM_VEHICLE_MODS(veh, Selectedmod);
+	int currMod = VEHICLE::GET_VEHICLE_MOD(veh, Selectedmod);
+	for (int i = -1; i < nummods; i++)
+	{
+		const char* ModLable = VEHICLE::GET_MOD_TEXT_LABEL(veh, Selectedmod, i);
+		const char* mod;
+		if (GAMEPLAY::IS_STRING_NULL_OR_EMPTY(ModLable))
+			mod = StringToChar(Custom(Selectedmod) + std::to_string(i));
+		else
+			mod = UI::_GET_LABEL_TEXT(ModLable);
+
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
+		{
+			bool selectedMod = currMod == i;
+			if (Toggle(i == -1 ? "Stock" : mod, &selectedMod))
+			{
+				VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+				VEHICLE::SET_VEHICLE_MOD(veh, Selectedmod, i, 1);
+			}
+		}
+	}
+}
+// on known null add mod name plus num, for horns add em via array 
+
+
+
+#include "common.hpp"
+#include "natives.hpp"
+#include "gui.hpp"
+#include "MenuFunctions.hpp"
+#include <imgui.h>
+#include <imgui_internal.h>
+#include <d3d11.h>
+#include <renderer.hpp>
+#include <script_global.hpp>
+#include "script.hpp"
+
+using namespace big;
+using namespace std;
+
+bool vehicleOnVehicleCollistion;
+void VehicleOnVehicleCollistion()
+{
+	if (vehicleOnVehicleCollistion)
+	{
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		VEHICLE::SET_VEHICLE_FRICTION_OVERRIDE(veh, 100.0f);
+		PED::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(playerPed, 1);
+		PED::SET_PED_CONFIG_FLAG(playerPed, 32, false);
+		if (VEHICLE::_IS_VEHICLE_DAMAGED(veh))
+			VEHICLE::SET_VEHICLE_FIXED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
+		ENTITY::SET_ENTITY_NO_COLLISION_ENTITY(nearbyveh(), veh, 1);
+		ENTITY::SET_ENTITY_NO_COLLISION_ENTITY(nearbypeds(), veh, 1);
+	}
+}
+int r = 255, g = 0, bb = 0;
+
+void RGBFade()
+{
+	if (r > 0 && bb == 0) {
+		r--;
+		g++;
+	}
+	if (g > 0 && r == 0) {
+		g--;
+		bb++;
+	}
+	if (bb > 0 && g == 0) {
+		r++;
+		bb--;
+	}
+}
+bool RGBFadeBodycolour;
+void RGBFadeBodyColour()
+{
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	if (RGBFadeBodycolour)
+	{
+		RGBFade();
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
+		{
+			VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, r, g, bb);
+			VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, r, g, bb);
+		}
+	}
+}
+bool RGBFadeTireSmokecolour;
+void RGBFadeTireSmokeColour()
+{
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	if (RGBFadeTireSmokecolour)
+	{
+		RGBFade();
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
+		{
+			VEHICLE::SET_VEHICLE_TYRE_SMOKE_COLOR(veh, r, g, bb);
+		}
+	}
+}
+bool RGBFadeNeoncolour;
+void RGBFadeNeonColour()
+{
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	if (RGBFadeNeoncolour)
+	{
+		RGBFade();
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
+		{
+			if (VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(veh, 0) &&
+				VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(veh, 1) &&
+				VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(veh, 2) &&
+				VEHICLE::_IS_VEHICLE_NEON_LIGHT_ENABLED(veh, 3))
+			{
+				VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, r, g, bb);
+			}
+			else
+			{
+				VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, 0, 1);
+				VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, 1, 1);
+				VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, 2, 1);
+				VEHICLE::_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, 3, 1);
+				VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, r, g, bb);
+			}
+		}
+	}
+}
+bool ReduceTireGrip;
+void ReducedTireGrip()
+{
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+
+	if (GetAsyncKeyState(VK_SHIFT))
+		VEHICLE::SET_VEHICLE_REDUCE_GRIP(veh, ReduceTireGrip);
+	else
+		VEHICLE::SET_VEHICLE_REDUCE_GRIP(veh, 0);
+}
+bool DriverOnwater;
+void DriverOnWater()
+{
+	Entity drive_water_obj;
+	if (DriverOnwater)
+	{
+		Player player = PLAYER::PLAYER_PED_ID();
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0);
+		//drive_on_water(playerPed, drive_water_obj);
+		DWORD model = ENTITY::GET_ENTITY_MODEL(veh);
+		Vector3 pos = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
+		float height = 0;
+		//WATER::SET_DEEP_OCEAN_SCALER(height);
+		if ((!(VEHICLE::IS_THIS_MODEL_A_PLANE(ENTITY::GET_ENTITY_MODEL(veh)))) && WATER::GET_WATER_HEIGHT_NO_WAVES(pos.x, pos.y, pos.z, &height)) {
+			Object container = OBJECT::GET_CLOSEST_OBJECT_OF_TYPE(pos.x, pos.y, pos.z, 4.0, GAMEPLAY::GET_HASH_KEY("prop_container_ld2"), 0, 0, 1);
+			if (ENTITY::DOES_ENTITY_EXIST(container) && height > -50.0f) {
+				Vector3 pRot = ENTITY::GET_ENTITY_ROTATION(playerPed, 0);
+				if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) pRot = ENTITY::GET_ENTITY_ROTATION(veh, 0);
+				RequestControlOfEnt(container);
+				ENTITY::SET_ENTITY_COORDS(container, pos.x, pos.y, height - 1.5f, 0, 0, 0, 1);
+				ENTITY::SET_ENTITY_ROTATION(container, 0, 0, pRot.z, 0, 1);
+				Vector3 containerCoords = ENTITY::GET_ENTITY_COORDS(container, 1);
+				if (pos.z < containerCoords.z) {
+					if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
+						ENTITY::SET_ENTITY_COORDS(playerPed, pos.x, pos.y, containerCoords.z + 2.0f, 0, 0, 0, 1);
+					}
+					else {
+						RequestControlOfEnt(veh);
+						Vector3 vehc = ENTITY::GET_ENTITY_COORDS(veh, 1);
+						ENTITY::SET_ENTITY_COORDS(veh, vehc.x, vehc.y, containerCoords.z + 2.0f, 0, 0, 0, 1);
+					}
+				}
+			}
+			else {
+				Hash model = GAMEPLAY::GET_HASH_KEY("prop_container_ld2");
+				STREAMING::REQUEST_MODEL(model);
+				while (!STREAMING::HAS_MODEL_LOADED(model))  script::get_current()->yield();
+				container = OBJECT::CREATE_OBJECT(model, pos.x, pos.y, pos.z, 1, 1, 0);
+				RequestControlOfEnt(container);
+				ENTITY::FREEZE_ENTITY_POSITION(container, 1);
+				ENTITY::SET_ENTITY_ALPHA(container, 0, 1);
+				ENTITY::SET_ENTITY_VISIBLE(container, 0, false);
+			}
+		}
+		else {
+			Object container = OBJECT::GET_CLOSEST_OBJECT_OF_TYPE(pos.x, pos.y, pos.z, 4.0, GAMEPLAY::GET_HASH_KEY("prop_container_ld2"), 0, 0, 1);
+			if (ENTITY::DOES_ENTITY_EXIST(container)) {
+				RequestControlOfEnt(container);
+				ENTITY::SET_ENTITY_COORDS(container, 0, 0, -1000.0f, 0, 0, 0, 1);
+				script::get_current()->yield();
+				ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&container);
+				ENTITY::DELETE_ENTITY(&container);
+				//WATER::RESET_DEEP_OCEAN_SCALER();
+			}
+		}
+	}
+}
+bool invincible;
+void Invincible()
+{
+	if (invincible)
+	{
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+
+		ENTITY::SET_ENTITY_INVINCIBLE(veh, TRUE);
+		ENTITY::SET_ENTITY_PROOFS(veh, 1, 1, 1, 1, 1, 1, 1, 1);
+		VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, 0);
+		VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh, 0);
+		VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(veh, 0);
+
+	}
+}
+bool Autofix;
+void AutoFix()
+{
+	Player player = PLAYER::PLAYER_PED_ID();
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(player);
+	if (Autofix)
+	{
+		if (VEHICLE::_IS_VEHICLE_DAMAGED(veh))
+		{
+			VEHICLE::SET_VEHICLE_FIXED(veh);
+			VEHICLE::SET_VEHICLE_DIRT_LEVEL(veh, 0.0f);
+			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh, 2000.0f);
+			VEHICLE::SET_VEHICLE_PETROL_TANK_HEALTH(veh, 2000.0f);
+			VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 2000.0f);
+			VEHICLE::SET_VEHICLE_UNDRIVEABLE(veh, false);
+		}
+	}
+}
+bool RandomPlateText;
+void randomplatetext()
+{
+	std::string plateSymbols[35] = {
+	"a", "b", "c", "d", "e", "f",
+	"g", "h", "i", "j", "k", "l",
+	"m", "n", "o", "p", "q",
+	"r", "s", "t", "u", "v",
+	"w", "x", "y", "z", "1",
+	"2", "3", "4", "5", "6", "7",
+	"8", "9",
+	};
+
+	if (RandomPlateText)
+	{
+		Player player = PLAYER::PLAYER_PED_ID();
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(player);
+
+		if (PED::IS_PED_IN_ANY_VEHICLE(player, 0))
+		{
+			std::string textInput =
+				plateSymbols[rand() % 35] +
+				plateSymbols[rand() % 35] +
+				plateSymbols[rand() % 35] +
+				plateSymbols[rand() % 35] +
+				plateSymbols[rand() % 35] +
+				plateSymbols[rand() % 35] +
+				plateSymbols[rand() % 35] +
+				plateSymbols[rand() % 35] +
+				plateSymbols[rand() % 35];
+			char* plateText = (strcpy((char*)malloc(textInput.length() + 1), textInput.c_str()));
+			VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(PED::GET_VEHICLE_PED_IS_IN(player, 0), plateText);
+		}
+	}
+}
+bool GlueTires;
+void Gluetires()
+{
+	if (GlueTires)
+	{
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0))
+		{
+			int myVehicle = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+			VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(myVehicle);
+		}
+	}
+}
+bool Deletetouch;
+void DeleteTouch()
+{
+	if (Deletetouch)
+	{
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		VEHICLE::SET_VEHICLE_FRICTION_OVERRIDE(veh, 100.0f);
+		PED::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(playerPed, 1);
+		PED::SET_PED_CONFIG_FLAG(playerPed, 32, false);
+		if (VEHICLE::_IS_VEHICLE_DAMAGED(veh))
+			VEHICLE::SET_VEHICLE_FIXED(PED::GET_VEHICLE_PED_IS_USING(playerPed));
+
+		Entity touchy = ENTITY::IS_ENTITY_TOUCHING_ENTITY(veh, nearbyveh());
+		if (touchy)
+		{
+			RequestControlOfEnt(nearbyveh());
+			ENTITY::SET_ENTITY_COORDS(nearbyveh(), 6400.f, 6400.f, 0.f, false, false, false, false);
+			VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(veh);
+		}
+	}
+}
+bool Vehiclegravity;
+void VehicleGravity()
+{
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	VEHICLE::SET_VEHICLE_GRAVITY(veh, !Vehiclegravity);
+}
+bool vehicleinvisible;
+void Vehicleinvisible()
+{
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	ENTITY::SET_ENTITY_VISIBLE(veh, !vehicleinvisible, NULL);
+}
+bool Hornboost;
+void HornBoost()
+{
+	if (Hornboost && CONTROLS::IS_CONTROL_PRESSED(2, INPUT_VEH_HORN))
+	{
+		Vehicle plvh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), FALSE);
+
+		if (!ENTITY::DOES_ENTITY_EXIST(plvh))
+			return;
+
+		if (!NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(plvh) != 0)
+		{
+			NETWORK::SET_NETWORK_ID_CAN_MIGRATE(plvh, true);
+			NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(plvh);
+		}
+
+		AUDIO::SET_VEHICLE_BOOST_ACTIVE(plvh, true);
+		ENTITY::APPLY_FORCE_TO_ENTITY(plvh, 1, 0.0f, 1.7f, 0.0f, 0.0f, 0.0f, 0.0f, 0, 1, 1, 1, 0, 1);
+		VEHICLE::SET_VEHICLE_FORWARD_SPEED(plvh, 50);
+
+		AUDIO::SET_VEHICLE_BOOST_ACTIVE(plvh, false);
+	}
+}
+bool VehicleToWorldcollision;
+void VehicleToWorldCollision()
+{
+	ENTITY::SET_ENTITY_COLLISION(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), FALSE), !VehicleToWorldcollision, !VehicleToWorldcollision);
+}
+uint64_t GetWheelPtr(Vehicle handle);
+void vehfunctions()
+{
+	//FlyModeForvehicle();
+	RGBFadeBodyColour();
+	RGBFadeTireSmokeColour();
+	RGBFadeNeonColour();
+	ReducedTireGrip();
+	DriverOnWater();
+	Invincible();
+	AutoFix();
+	randomplatetext();
+	Gluetires();
+	//CarJump();
+	DeleteTouch();
+	//TopSpeedometer();
+	VehicleGravity();
+	Vehicleinvisible();
+	HornBoost();
+	VehicleToWorldCollision();
+}
+
+
+
+
+
+
+void VehicleMainSub()
+{
+	SubMenuOption("Vehicle Spawner", VehicleSpawnerMenu_SUB);
+	SubMenuOption("Vehicle Customs", VehicleCustoms_SUB);
+	SubMenuOption("Cargobob Settings", CargobobEdit_SUB);
+	SubMenuOption("Vehicle Key", Vehiclekey_SUB);
+	SubMenuOption("Fly Mode",  Flymode_SUB);
+	SubMenuOption("AI Drving", AI_Driving_SUB);
+	SubMenuOption("Save/Load Vehicle", SaveAndLoadCustomgVehicle_SUB);
+	SubMenuOption("Vehicle Multiplier", VehicleMultiplier_SUB);
+	//PressOptions();
+	Toggle("Invincible", &invincible, "Vehicle becomes invincible");
+	Toggle("Auto fix", &Autofix, "Vehicle will repir itself once damaged");
+	Toggle("Invisible", &vehicleinvisible, "Vehicle becomes invisible");
+	Toggle("Faded Body colour", &RGBFadeBodycolour, "Fades through 16,777,216 colours(vehicle body paint)");
+	Toggle("Faded Neon colour", &RGBFadeNeoncolour, "Fades through 16,777,216 colours(neon light/underglow)");
+	Toggle("Reduce Tire Grip", &ReduceTireGrip, "When shift is hed it'll reduce tire grip");
+	Toggle("Driver On water", &DriverOnwater, "Vehicle can dirve on water, and you can walk on it only when you get out");
+	Toggle("Random Plate Text", &RandomPlateText, "Vehicle Plate number changes randomly");
+	Toggle("Glue Tires", &GlueTires, "Tires are glued to the ground");
+	//Toggle("Vehicle jump", &Carjump, "Vehicle jumpes if spcae or A/X(controller) is cliked");
+	Toggle("Delete touch", &Deletetouch, "If a vehicle touches your Vehicle it'll be deleted");
+	//Toggle("Speedometer", &Speedometer, "A Speedometer will apper on top and on your plate");
+	Toggle("Vehicle Gravity", &Vehiclegravity, "When toggled on Vehicle Gravity will be no more");
+	Toggle("Horn boost", &Hornboost, "Holding the horn will active the boost");
+	End("Vehicle Menu");
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+bool FlyModeForVehicle;
+bool GoingBackWards;
+bool VehicleCollision = true;
+float Speed = 1.f;
+float yaw, rotation, pitch, roll;
+float VehiclePitch_ForFlyMode;
+void FlyModeForvehicle()
+{
+	if (FlyModeForVehicle)
+	{
+		//HideUI(); add back but only controller
+		if (PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()) != NULL)
+		{
+			VEHICLE::SET_VEHICLE_GRAVITY(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), false);
+			float Current = ENTITY::GET_ENTITY_SPEED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()));
+			Vehicle Veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
+
+			if (GetAsyncKeyState(0x57) || CONTROLS::GET_DISABLED_CONTROL_NORMAL(0, INPUT_FRONTEND_RT)) //W key and RT
+			{
+				GoingBackWards = false;
+				ENTITY::SET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), VehiclePitch_ForFlyMode, 0.0f, yaw, 2, true);
+				VEHICLE::SET_VEHICLE_FORWARD_SPEED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), Current += Speed);
+			}
+			else if (GetAsyncKeyState(0x53) || CONTROLS::GET_DISABLED_CONTROL_NORMAL(0, INPUT_FRONTEND_LT)) //S key and LT
+			{
+				GoingBackWards = true;
+				ENTITY::SET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), VehiclePitch_ForFlyMode, 0.0f, yaw, 2, true);
+				VEHICLE::SET_VEHICLE_FORWARD_SPEED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), (Current * -1.0f) - 1.0f);
+			}
+			else
+			{
+				ENTITY::SET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), VehiclePitch_ForFlyMode, roll, yaw, 2, true);
+				if (Current > Speed && GoingBackWards)
+				{
+					VEHICLE::SET_VEHICLE_FORWARD_SPEED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), Current - 1.0f);
+				}
+				else
+				{
+					VEHICLE::SET_VEHICLE_FORWARD_SPEED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), 0.0f);
+				}
+			}
+
+			if (GetAsyncKeyState(0x41) || CONTROLS::GET_DISABLED_CONTROL_NORMAL(0, INPUT_FRONTEND_LB)) //A key and LB
+			{
+				ENTITY::SET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), VehiclePitch_ForFlyMode, roll, yaw += 1.0f, 2, true);
+			}
+
+			if (GetAsyncKeyState(0x44) || CONTROLS::GET_DISABLED_CONTROL_NORMAL(0, INPUT_FRONTEND_RB)) //D key and RB
+			{
+				ENTITY::SET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), VehiclePitch_ForFlyMode, roll, yaw -= 1.0f, 2, true);
+			}
+
+			if (GetAsyncKeyState(VK_SHIFT) || CONTROLS::GET_DISABLED_CONTROL_NORMAL(0, INPUT_FRONTEND_ACCEPT)) // SHIFT and A(controller)
+			{
+				ENTITY::SET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), VehiclePitch_ForFlyMode -= 1.0f, roll, yaw, 2, true);
+			}
+
+			if (GetAsyncKeyState(VK_CONTROL) || CONTROLS::GET_DISABLED_CONTROL_NORMAL(0, INPUT_FRONTEND_CANCEL)) // CONTROL and B(controller)
+			{
+				ENTITY::SET_ENTITY_ROTATION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), VehiclePitch_ForFlyMode += 1.0f, roll, yaw, 2, true);
+			}
+			int Handle = PLAYER::PLAYER_PED_ID();
+			int Handle2 = PED::GET_VEHICLE_PED_IS_IN(Handle, 0);
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+enum DrivingStyle : int
+{
+	Normal = 786603,
+	IgnoreLights = 2883621,
+	SometimesOvertakeTraffic = 5,
+	Rushed = 1074528293,
+	AvoidTraffic = 786468,
+	AvoidTrafficExtremely = 6,
+};
+bool aidriver = false;
+int drivingMode = Normal;
+float aispeed = 40.0f;
+
+void AI_Drving()
+{
+	Vector3 des = get_blip_marker();
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	Hash vehicleModel = ENTITY::GET_ENTITY_MODEL(veh);
+	if (!aidriver)
+	{
+		if (Option("Turn on AI"))
+		{
+			if (waypoint)
+			{
+				AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(playerPed, veh, des.x,
+					des.y, des.z, aispeed, drivingMode, 6);
+				aidriver = true;
+				AddLog("AI Driver on");
+			}
+			else
+			{
+				AddLog("please set a waypoint to direct the driver");
+			}
+			AddLog("Driving mode: Normal");
+		}
+	}
+	if (aidriver)
+	{
+		if (Option("Turn off AI"))
+		{
+			AI::CLEAR_PED_TASKS(playerPed);
+			AddLog("AI Driver off");
+			aidriver = false;
+		}
+	}
+	Float("AI Speed", aispeed, 0.0f, VEHICLE::_GET_VEHICLE_MAX_SPEED(veh), 20.f);
+	if (Option("Normal")) {
+		drivingMode = Normal;
+		AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(playerPed, veh, des.x,
+			des.y, des.z, aispeed, drivingMode, 6);
+		AddLog("Driving mode: Normal");
+	}
+	if (Option("Ignore Lights")) {
+		drivingMode = IgnoreLights;
+		AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(playerPed, veh, des.x,
+			des.y, des.z, aispeed, drivingMode, 6);
+		AddLog("Driving mode: Ignore Lights");
+	}
+	if (Option("Sometimes Overtake Traffic")) {
+		drivingMode = SometimesOvertakeTraffic;
+		AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(playerPed, veh, des.x,
+			des.y, des.z, aispeed, drivingMode, 6);
+		AddLog("Driving mode: Sometimes Overtake Traffic");
+	}
+	if (Option("Rushed")) {
+		drivingMode = Rushed;
+		AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(playerPed, veh, des.x,
+			des.y, des.z, aispeed, drivingMode, 6);
+		AddLog("Driving mode: Rushed");
+	}
+	if (Option("Avoid Traffic")) {
+		drivingMode = AvoidTraffic;
+		AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(playerPed, veh, des.x,
+			des.y, des.z, aispeed, drivingMode, 6);
+		AddLog("Driving mode: Avoid Traffic");
+	}
+	if (Option("Avoid Traffic A Lot")) {
+		drivingMode = AvoidTrafficExtremely;
+		AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(playerPed, veh, des.x,
+			des.y, des.z, aispeed, drivingMode, 6);
+		AddLog("Driving mode: Avoid Traffic A Lot");
+	}
+}
+void PressOptions()
+{
+	if (Option("Fix Vehicle"))
+	{
+		Player player = PLAYER::PLAYER_PED_ID();
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
+		BOOL bPlayerExists = ENTITY::DOES_ENTITY_EXIST(playerPed);
+
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		VEHICLE::SET_VEHICLE_FIXED(veh);
+	}
+
+	if (Option("Turn on engine"))
+	{
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, true, false);
+	}
+}
+void PlayerVehicleLocalSave()
+{
+	Ped  playerPed = PLAYER::PLAYER_PED_ID();
+	Vehicle vehlastused;
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	Blip blip;
+
+	if (Option("Remember Vehicle your in"))
+	{
+		UI::SET_BLIP_ALPHA(blip, 0);
+		blip = set_blip(veh, 255, 1, true);
+		vehlastused = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+	}
+	if (Option("Teleport to Last Saved Vehicle"))
+	{
+		Vector3 vehco = ENTITY::GET_ENTITY_COORDS(vehlastused, false);
+		teleport_to_coords(playerPed, vehco);
+	}
+	if (Option("Teleport Last Saved Vehicle to Self"))
+	{
+		Vector3 player = ENTITY::GET_ENTITY_COORDS(playerPed, false);
+		RequestControlOfEnt(vehlastused);
+		teleport_to_coords(vehlastused, player);
+	}
+	if (Option("Teleport into Last Saved Vehicle"))
+	{
+		PED::SET_PED_INTO_VEHICLE(playerPed, vehlastused, -1);
+	}
+}
+/*
+0 = Front Left Door
+1 = Front Right Door
+2 = Back Left Door
+3 = Back Right Door
+4 = Hood
+5 = Trunk
+6 = Trunk2
+*/
+std::vector<std::string> DoorOptions_//Not in use rn
+{
+	"Nothing",
+	"Close",
+	"Open",
+	"Door Locks",
+	"Break Doors",
+};
+
+std::vector<std::string> LockDoorOptions
+{
+	"Unlocked",
+	"Locked",
+	"LockedForPlayer",
+	"ChildLock",
+	"Unknown 5",
+	"Unknown 6",
+	"CanBeBrokenInto",
+	"CanBeBrokenIntoPersist",
+	"Unknown 9",
+	"CannotBeTriedToBeEntered"
+};
+std::vector<std::string> DoorOptions
+{
+	"Front Left Door",
+	"Front Right Door",
+	"Back Left Door",
+	"Back Right Door",
+	"Hood",
+	"Trunk",
+	"Trunk2",
+};
+int pos;
+int opendoor, closedoor;
+int doorlocking;
+int doorIndex_break;
+void VehicleKey_SUB()
+{
+	Ped playerPed = PLAYER::PLAYER_PED_ID();
+	Vehicle oldveh = PED::GET_VEHICLE_PED_IS_IN(playerPed, true);
+
+	if (StringArray("Close Doors: ", DoorOptions, closedoor))
+			VEHICLE::SET_VEHICLE_DOOR_SHUT(oldveh, closedoor, false);
+
+	if (StringArray("Open Doors: ", DoorOptions, opendoor))
+			VEHICLE::SET_VEHICLE_DOOR_OPEN(oldveh, opendoor, false, false);
+
+	if (StringArray("Door Lock: ", LockDoorOptions, doorlocking))
+			VEHICLE::SET_VEHICLE_DOORS_LOCKED(oldveh, doorlocking);
+
+	if (StringArray("Break Doors: ", DoorOptions, doorIndex_break))
+			VEHICLE::SET_VEHICLE_DOOR_BROKEN(oldveh, doorIndex_break, true);
+}
+int Enginemulti = 1;
+int Torquemulti = 1;
+int Damagemulti = 1;
+int Headlightmulti = 1;
+void ApplyMultiplier()
+{
+	Vehicle plvh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
+	VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(plvh, Torquemulti);
+	VEHICLE::_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(plvh, Enginemulti);
+	PLAYER::SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(PLAYER::PLAYER_ID(), Damagemulti);
+	VEHICLE::SET_VEHICLE_LIGHT_MULTIPLIER(plvh, Headlightmulti);
+}
+void VehicleMultiplier()
+{
+	if (Int("Engine Multiplier", Enginemulti, 1, 500, 1)) ApplyMultiplier();
+	if (Int("Torque Multiplier", Torquemulti, 1, 500, 1)) ApplyMultiplier();
+	if (Int("Damage Multiplier", Damagemulti, 1, 500, 1)) ApplyMultiplier();
+	if (Int("Headlight Multiplier", Headlightmulti, 0, 500, 1)) ApplyMultiplier();
+	if (Option("Reset"))
+	{
+		Vehicle plvh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), FALSE);
+		VEHICLE::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(plvh, 1.0f);
+		VEHICLE::_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(plvh, 1.0f);
+		PLAYER::SET_PLAYER_VEHICLE_DAMAGE_MODIFIER(PLAYER::PLAYER_ID(), 1.0f);
+		VEHICLE::SET_VEHICLE_LIGHT_MULTIPLIER(plvh, 1);
+		Enginemulti = 1.0f;
+		Torquemulti = 1.0f;
+		Damagemulti = 1.0f;
+		Headlightmulti = 1.0f;
+	}
+}
+
+
+#include "common.hpp"
+#include "MenuFunctions.hpp"
+#include <imgui.h>
+#include <imgui_internal.h>
+#include <d3d11.h>
+#include <renderer.hpp>
+#include <script_global.hpp>
+
+using namespace big;
+using namespace std;
+
+bool SpawningVehicleForMe = true;
+bool PreviewVehicle = true;
+bool SpawnInVehicle = true;
+bool DeleteLastVehicle = true;
+bool SpawnByPass = true;
+bool FadeVehicleIn;
+bool SetAsPlayerVehicle;
+bool SpawnAirVehicleInAir = true;
+bool SpawnVehicleOnPickedPlayer;
+
+
+void SpawnVehicle(char* VehicleToSpawn, bool SpawnInVehicle, bool DeleteLastVehicle, bool SpawnWithFX, bool SpawnWithFade, bool SpawnAirVehicleInAir, bool SpawnByPass)
+{
+	g_fiber_pool->queue_job([=]
+	{
+			Hash VehicleModel = GAMEPLAY::GET_HASH_KEY(VehicleToSpawn);
+
+			if (STREAMING::IS_MODEL_VALID(VehicleModel))
+			{
+				STREAMING::REQUEST_MODEL(VehicleModel);
+				while (!STREAMING::HAS_MODEL_LOADED(VehicleModel))script::get_current()->yield();
+
+				Vector3 PlayerCoords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), false);
+
+				float forward = 5.f;
+				float heading = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
+				float xVector = forward * sin(degToRad(heading)) * -1.f;
+				float yVector = forward * cos(degToRad(heading));
+
+				Ped playerPed = PLAYER::PLAYER_PED_ID();
+				Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+
+				if (DeleteLastVehicle)
+				{
+					if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0))
+					{
+						NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(playerVeh);
+						if (NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(playerVeh))
+						{
+							if (ENTITY::DOES_ENTITY_EXIST(playerVeh))
+							{
+								ENTITY::SET_ENTITY_AS_MISSION_ENTITY(playerVeh, 1, 1);
+								NETWORK::NETWORK_FADE_OUT_ENTITY(playerVeh, 1, 0);
+								VEHICLE::DELETE_VEHICLE(&playerVeh);
+							}
+						}
+					}
+				}
+
+					if (VEHICLE::IS_THIS_MODEL_A_HELI(VehicleModel) ||
+						VEHICLE::IS_THIS_MODEL_A_PLANE(VehicleModel) &&
+						!ENTITY::IS_ENTITY_IN_AIR(VehicleModel) && SpawnAirVehicleInAir)
+						PlayerCoords.z = 650.f;
+
+
+
+				*script_global::script_global(4269479).as<bool*>() = SpawnByPass;
+
+
+
+				Vehicle vehicle{};
+
+				if (SpawnVehicleOnPickedPlayer)
+				{
+						Vector3 PickedPlayerCoords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(selectedPlayer), false);
+						*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x9090;
+						vehicle = VEHICLE::CREATE_VEHICLE(VehicleModel, PickedPlayerCoords.x + xVector, PickedPlayerCoords.y + yVector, PickedPlayerCoords.z, heading, true, true);
+						*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x0574;
+						DECORATOR::DECOR_SET_INT(vehicle, "Player_Vehicle", NETWORK::_NETWORK_HASH_FROM_PLAYER_HANDLE(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(selectedPlayer)));
+
+				}
+				if (SpawningVehicleForMe)
+				{
+
+					*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x9090;
+					vehicle = VEHICLE::CREATE_VEHICLE(VehicleModel, PlayerCoords.x + xVector, PlayerCoords.y + yVector, PlayerCoords.z, heading, true, true);
+					*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x0574;
+
+					if (SetAsPlayerVehicle)
+						DECORATOR::DECOR_SET_INT(vehicle, "Player_Vehicle", NETWORK::_NETWORK_HASH_FROM_PLAYER_HANDLE(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(playerPed)));
+				}
+
+				if (FadeVehicleIn)
+					NETWORK::NETWORK_FADE_IN_ENTITY(vehicle, 1);
+				if (SpawnInVehicle)
+					PED::SET_PED_INTO_VEHICLE(playerPed, vehicle, -1);
+
+
+					NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(vehicle);
+					VEHICLE::SET_VEHICLE_ENGINE_ON(vehicle, true, true, true);
+					VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(vehicle);
+
+					DECORATOR::DECOR_SET_INT(vehicle, "MPBitset", 0);
+
+					auto networkId = NETWORK::VEH_TO_NET(vehicle);
+					if (NETWORK::NETWORK_GET_ENTITY_IS_NETWORKED(vehicle))
+						NETWORK::SET_NETWORK_ID_EXISTS_ON_ALL_MACHINES(networkId, true);
+			}
+	});
+}
+
+std::string VehicleClasses[] =
+{
+	"Compacts",
+	"Sedans",
+	"SUV",
+	"Coupes",
+	"Muscle",
+	"SportsClassics",
+	"Sports",
+	"Super",
+	"Motorcycles",
+	"OffRoad",
+	"Industrial",
+	"Utility",
+	"Vans",
+	"Cycles",
+	"Boats",
+	"Helicopters",
+	"Planes",
+	"Service",
+	"Emergency",
+	"Military",
+	"Commercial",
+	"Trains",
+	"Open Wheel"
+};
+int SelectedSubVehicleMenu;
+//void AddLog(const char* fmt, ...) IM_PRINTFARGS(2)
+
+const char* VehicleDisplay(char* hash)
+{
+		Hash VehicleHash = GAMEPLAY::GET_HASH_KEY(hash);
+		const char* displayName = VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(VehicleHash);
+		const char* VehicleDisplayname = UI::_GET_LABEL_TEXT(displayName);
+		return VehicleDisplayname;
+}
+void PickingVehicleMenu()
+{
+	Toggle("Preview Vehicle", &PreviewVehicle);
+	Toggle("Spawn In Vehicle", &SpawnInVehicle);
+	Toggle("Delete Last Vehicle", &DeleteLastVehicle);
+	Toggle("DLC Bypass", &SpawnByPass);
+	Toggle("Fade Vehicle In", &FadeVehicleIn);
+	Toggle("Spawn Air Vehicle In Air", &SpawnAirVehicleInAir);
+
+	for (int i = 0; i < IM_ARRAYSIZE(VehicleClasses); i++)
+	{
+		SubMenuOption(StringToChar(VehicleClasses[i]), PickedVehicle_SUB) ? SelectedSubVehicleMenu = i : NULL;
+	}
+}
+void PickedVehicleMenu()
+{
+	for (int i = 0; i < IM_ARRAYSIZE(VehicleList); i++)
+	{
+		if (VEHICLE::GET_VEHICLE_CLASS_FROM_NAME(GAMEPLAY::GET_HASH_KEY(VehicleList[i])) == SelectedSubVehicleMenu)
+		{
+			if (Option(VehicleDisplay(VehicleList[i])))
+			{
+				AddLog(VehicleList[i]);
+				SpawnVehicle(VehicleList[i], SpawnInVehicle, DeleteLastVehicle, FadeVehicleIn, FadeVehicleIn, SpawnAirVehicleInAir, SpawnByPass);
+
+			}
+			if (GetAsyncKeyState(0x4B))
+			{
+				if (currentOption == OptionCount)
+					AddLog(VehicleList[i]);
+			}
+		}
+	}
+}
+
+
+
+
+
+#include "MenuFunctions.hpp"
+
+using namespace big;
+using namespace std;
+void ClothingMenu();
+bool TickGodMode;
+void setGodMode()
+{
+	if (TickGodMode)
+		set_value<int>({ OFFSET_PLAYER , OFFSET_ENTITY_GOD }, 1);
+	else
+		set_value<int>({ OFFSET_PLAYER , OFFSET_ENTITY_GOD }, 0);
+}
+int WantedLevel;
+int targettingmodes;
+std::vector<std::string> targettingmodesArray  { "Traditional GTA Aim", "Assisted Aiming", "Free Aim" };
+void setEditAndClearAndPTG()
+{
+	if (Option("Clear Wanted Level"))
+		set_value<int>({ OFFSET_PLAYER, OFFSET_PLAYER_INFO, OFFSET_PLAYER_INFO_WANTED }, 0);
+	if (Int("Edit Wanted Level", WantedLevel, 0, 5, 1))
+		set_value<int>({ OFFSET_PLAYER, OFFSET_PLAYER_INFO, OFFSET_PLAYER_INFO_WANTED }, WantedLevel);
+	if (StringArray("Aim: ", targettingmodesArray, targettingmodes))
+		set_value<int>({ OFFSET_PLAYER, OFFSET_PLAYER_INFO, OFFSET_PLAYER_INFO_WANTED }, WantedLevel);
+}
+bool TickNeverWanted;
+void setNeverWanted()
+{
+	if (TickNeverWanted)
+		set_value<int>({ OFFSET_PLAYER, OFFSET_PLAYER_INFO, OFFSET_PLAYER_INFO_WANTED }, 0);
+	
+}
+bool TickAlwaysWanted;
+void setAlwaysWanted()
+{
+	if (TickAlwaysWanted)
+		set_value<int>({ OFFSET_PLAYER, OFFSET_PLAYER_INFO, OFFSET_PLAYER_INFO_WANTED }, 5);
+}
+bool TickIgnorePlayer;
+void setIgnorePlayer()
+{
+	if (TickIgnorePlayer)
+	{
+		PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), 1);
+		PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), 1);
+		PLAYER::SET_PLAYER_CAN_BE_HASSLED_BY_GANGS(PLAYER::PLAYER_PED_ID(), 0);
+		PLAYER::SET_IGNORE_LOW_PRIORITY_SHOCKING_EVENTS(PLAYER::PLAYER_PED_ID(), 1);
+		int ped = nearbypeds();
+		NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(ped);
+		PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, 1);
+		PED::SET_PED_FLEE_ATTRIBUTES(ped, 0, 0);
+		PED::SET_PED_COMBAT_ATTRIBUTES(ped, 17, 1);
+	}
+	else
+	{
+		PLAYER::SET_PLAYER_CAN_BE_HASSLED_BY_GANGS(PLAYER::PLAYER_PED_ID(), 1);
+		PLAYER::SET_IGNORE_LOW_PRIORITY_SHOCKING_EVENTS(PLAYER::PLAYER_PED_ID(), 0);
+		PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), false);
+		PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), false);
+	}
+}
+bool TickMaxStamina;
+void setMaxStamina()
+{
+	if (TickMaxStamina)
+		set_value<float>({ OFFSET_PLAYER, OFFSET_PLAYER_INFO, OFFSET_PLAYER_INFO_STAMINA }, get_value<float>({ OFFSET_PLAYER, OFFSET_PLAYER_INFO, OFFSET_PLAYER_MAX_STAMINA_REGEN }));
+}
+bool TickOfftheRader;
+void setOfftheRader()
+{
+	if (TickOfftheRader)
+		set_value<float>({ OFFSET_PLAYER, OFFSET_ENTITY_HEALTH_MAX }, 0.f);
+}
+bool TickFastRun;
+void setFastRun()
+{
+	if (TickFastRun)
+		set_value<float>({ OFFSET_PLAYER, OFFSET_PLAYER_INFO, OFFSET_PLAYER_INFO_RUN_SPD }, 2.50f);
+	else
+		set_value<float>({ OFFSET_PLAYER, OFFSET_PLAYER_INFO, OFFSET_PLAYER_INFO_RUN_SPD }, 1.0f);
+}
+bool TickFastSwim;
+void setFastSwim()
+{
+	if (TickFastSwim)
+		set_value<float>({ OFFSET_PLAYER, OFFSET_PLAYER_INFO, OFFSET_PLAYER_INFO_SWIM_SPD }, 2.50f);
+	else
+		set_value<float>({ OFFSET_PLAYER, OFFSET_PLAYER_INFO, OFFSET_PLAYER_INFO_SWIM_SPD }, 1.0f);
+}
+bool TickRagDoll;
+void setRagdoll()
+{
+	Ped playerPed = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID());
+	PED::SET_PED_CAN_RAGDOLL(playerPed, !TickRagDoll);
+	PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(playerPed, !TickRagDoll);
+}
+bool TickSeatBelt;
+void setSeatBelt()
+{
+	if (TickSeatBelt)
+	{
+		Ped playerPed = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID());
+		PED::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(playerPed, 1);
+		PED::SET_PED_CONFIG_FLAG(playerPed, 32, false);
+		ENTITY::SET_ENTITY_PROOFS(playerPed, TickGodMode, TickGodMode, TickGodMode, TRUE, TickGodMode, TickGodMode, TickGodMode, TickGodMode);
+	}
+}
+bool TickbInvisible;
+void setInivisible()
+{
+	ENTITY::SET_ENTITY_VISIBLE(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID()), !TickbInvisible, 0);
+	NETWORK::_NETWORK_SET_ENTITY_INVISIBLE_TO_NETWORK(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID()), !TickbInvisible);
+}
+bool TickSuperJump;
+void setSuperjump()
+{
+	if (TickSuperJump)
+		GAMEPLAY::SET_SUPER_JUMP_THIS_FRAME(PLAYER::PLAYER_ID());
+}
+bool TickHealthRecharge;
+void setHealthRecharge()
+{
+	if (TickHealthRecharge)
+		PLAYER::SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER::PLAYER_ID(), 1.f);
+}
+bool TickSelfNoClip;
+void setSelfNoClip()
+{
+	if (TickSelfNoClip)
+	{
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
+		Vector3 pos = ENTITY::GET_ENTITY_COORDS(playerPed, false);
+		ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, pos.x, pos.y, pos.z, false, false, false);
+		if (GetAsyncKeyState(VK_KEY_W) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_MOVE_UP)) {
+			float fivef = .5f;
+			float heading = ENTITY::GET_ENTITY_HEADING(playerPed);
+			float xVec = fivef * sin(degToRad(heading)) * -1.0f;
+			float yVec = fivef * cos(degToRad(heading));
+			ENTITY::SET_ENTITY_HEADING(playerPed, heading);
+
+			pos.x -= xVec, pos.y -= yVec;
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, pos.x, pos.y, pos.z, false, false, false);
+		}
+		if (GetAsyncKeyState(VK_KEY_S) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_MOVE_DOWN)) {
+			float fivef = .5f;
+			float heading = ENTITY::GET_ENTITY_HEADING(playerPed);
+			float xVec = fivef * sin(degToRad(heading)) * -1.0f;
+			float yVec = fivef * cos(degToRad(heading));
+			ENTITY::SET_ENTITY_HEADING(playerPed, heading);
+
+			pos.x += xVec, pos.y += yVec;
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, pos.x, pos.y, pos.z, false, false, false);
+		}
+		if (GetAsyncKeyState(VK_KEY_A) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_MOVE_LEFT)) {
+			float fivef = .5f;
+			float heading = ENTITY::GET_ENTITY_HEADING(playerPed);
+			ENTITY::SET_ENTITY_HEADING(playerPed, heading + 1.f);
+		}
+		if (GetAsyncKeyState(VK_KEY_D) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_LOOK_RIGHT)) {
+			float fivef = .5f;
+			float heading = ENTITY::GET_ENTITY_HEADING(playerPed);
+			ENTITY::SET_ENTITY_HEADING(playerPed, heading - 1.f);
+		}
+		if (GetAsyncKeyState(VK_SHIFT) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_RB)) {
+			float heading = ENTITY::GET_ENTITY_HEADING(playerPed);
+			ENTITY::SET_ENTITY_HEADING(playerPed, heading);
+
+			pos.z -= 0.1;
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, pos.x, pos.y, pos.z, false, false, false);
+		}
+		if (GetAsyncKeyState(VK_SPACE) || CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(2, INPUT_FRONTEND_LB)) {
+			float heading = ENTITY::GET_ENTITY_HEADING(playerPed);
+			ENTITY::SET_ENTITY_HEADING(playerPed, heading);
+
+			pos.z += 0.1;
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, pos.x, pos.y, pos.z, false, false, false);
+		}
+	}
+}
+bool TickCleanPlayer;
+void setCleanPlayer()
+{
+	if (TickCleanPlayer)
+	{
+		PED::CLEAR_PED_WETNESS(PLAYER::PLAYER_PED_ID());
+		PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID());
+		PED::RESET_PED_VISIBLE_DAMAGE(PLAYER::PLAYER_PED_ID());
+	}
+}
+bool TickShortPlayer;
+void setShortPlayer()
+{
+	PED::SET_PED_CONFIG_FLAG(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID()), 223, TickShortPlayer);
+}
+void PlayerHealthOption()
+{
+	if (Option("Refill Health"))
+	{
+	
+			ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), PED::GET_PED_MAX_HEALTH(PLAYER::PLAYER_PED_ID()));
+		
+	}
+	if (Option("Refill Armour"))
+	{
+		
+			PED::ADD_ARMOUR_TO_PED(PLAYER::PLAYER_PED_ID(), PLAYER::GET_PLAYER_MAX_ARMOUR(PLAYER::PLAYER_PED_ID()));
+	
+	}
+	if (Option("Clean Ped"))
+	{
+	
+			PED::CLEAR_PED_WETNESS(PLAYER::PLAYER_PED_ID());
+			PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID());
+			PED::RESET_PED_VISIBLE_DAMAGE(PLAYER::PLAYER_PED_ID());
+
+	}
+}
+bool TickFireBreath;
+void setFireBreath()
+{
+	if (TickFireBreath)
+	{
+		float XPos = 0.02, YPos = 0.2, ZPos = 0.0, XOff = 90.0, YOff = -100.0, ZOff = 90.0;
+		STREAMING::REQUEST_NAMED_PTFX_ASSET("core");
+		GRAPHICS::USE_PARTICLE_FX_ASSET("core");
+		int ptfx = GRAPHICS::START_NETWORKED_PARTICLE_FX_NON_LOOPED_ON_PED_BONE("ent_sht_flame", PLAYER::PLAYER_PED_ID(), XPos, YPos, ZPos, XOff, YOff, ZOff, 0x796e, 1, 1, 1, 1);
+		STREAMING::REMOVE_PTFX_ASSET();
+	}
+}
+void LoadAnim(char* dict)
+{
+	int tick = 0;
+	STREAMING::REQUEST_ANIM_DICT(dict);
+	while (tick < 100 && !STREAMING::HAS_ANIM_DICT_LOADED(dict))
+	{
+		tick++;
+		script::get_current()->yield();
+	}
+}
+void playAnimation(Ped ped, bool loop, char* dict, char* anim)
+{
+	LoadAnim(dict);
+	int a = -1;
+	int b = 1;
+
+	if (!loop)
+	{
+		a = 1;
+		b = 0;
+	}
+
+	AI::TASK_PLAY_ANIM(ped, dict, anim, 10000.0f, -1.5f, a, b, 0.445f, false, false, false);
+}
+void CreatePed(char* PedName, Vector3 SpawnCoordinates, int ped_type, bool network_handle, bool dance)
+{
+	Ped NewPed;
+	int PedHash = GAMEPLAY::GET_HASH_KEY(PedName);
+		
+	if (STREAMING::IS_MODEL_VALID(PedHash) && STREAMING::IS_MODEL_IN_CDIMAGE(PedHash))
+	{
+		STREAMING::REQUEST_MODEL(PedHash);
+		while (!STREAMING::HAS_MODEL_LOADED(PedHash)) script::get_current()->yield();
+
+		NewPed = PED::CREATE_PED(ped_type, PedHash, SpawnCoordinates.x, SpawnCoordinates.y, SpawnCoordinates.z, 0, network_handle, 1);
+		PED::SET_PED_FLEE_ATTRIBUTES(NewPed, 0, 0);
+		if (dance) playAnimation(NewPed, true, "rcmcollect_paperleadinout@", "meditiate_idle");
+		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(PedHash);
+	}	
+}
+
+//a_c_rhesus
+void monkeyGun()
+{
+	Vector3 Impact_COORDS; Entity AimedAtTarget;
+	if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(PLAYER::PLAYER_PED_ID(), &Impact_COORDS))
+	{
+		if (PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(PLAYER::PLAYER_ID(), &AimedAtTarget))
+		{
+			RequestControlOfEnt(AimedAtTarget);
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(AimedAtTarget,0, 0, 500, 1, 1, 1);
+			//ENTITY::DELETE_ENTITY(&AimedAtTarget);
+			CreatePed("a_c_rhesus", Impact_COORDS, 28, true, true);
+			
+		}
+	}
+}
+void LocalTick()
+{
+	//monkeyGun();
+	setGodMode();
+	setFastRun();
+	setFastSwim();
+	setRagdoll();
+	setSeatBelt();
+	setSelfNoClip();
+	setSuperjump();
+	setNeverWanted();
+	setAlwaysWanted();
+	setMaxStamina();
+	setHealthRecharge();
+	setInivisible();
+	setIgnorePlayer();
+	setCleanPlayer();
+	setShortPlayer();
+	setFireBreath();
+	setOfftheRader();
+}
+extern bool DOGEO;
+void LocalSub()
+{
+	SubMenuOption("Clothing Menu", ClothingMenu_SUB);
+	SubMenuOption("TimecycleModifiers", TimecycleModifiers_SUB);
+	SubMenuOption("Ped Animation", PedAnim_SUB); 
+	SubMenuOption("Model Menu", ModelMenu_SUB); 
+	Toggle("God Mode", &TickGodMode);
+	Toggle("Health Recharge", &TickHealthRecharge);
+	Toggle("Invisible", &TickbInvisible);
+	Toggle("Clean Ped", &TickCleanPlayer);
+	Toggle("Never Wanted", &TickNeverWanted);
+	Toggle("Always Wanted", &TickAlwaysWanted);
+	setEditAndClearAndPTG();
+	Toggle("Ignore Player", &TickIgnorePlayer);
+	PlayerHealthOption();
+	Toggle("Max Stamina", &TickMaxStamina);
+	Toggle("Fast Run", &TickFastRun);
+	Toggle("Fast Swim", &TickFastSwim);
+	Toggle("No RagDoll", &TickRagDoll);
+	Toggle("Seat Belt", &TickSeatBelt);
+	Toggle("Fire Breath", &TickFireBreath);
+	Toggle("Super Jump", &TickSuperJump);
+	Toggle("No Clip", &TickSelfNoClip, "W A S D | RB LB  L Sticks R Sticks");
+	Toggle("Off the Rader", &TickOfftheRader);
+	Toggle("Short Player", &TickShortPlayer);
+	End("Local");
+}
+
+
+#include "common.hpp"
+#include "script.hpp"
+#include "fiber_pool.hpp"
+#include "natives.hpp"
+#include "gta_util.hpp"
+#include "gui.hpp"
+
+#include "MenuFunctions.hpp"
+int selectedPlayer;
+using namespace rage;
+float degToRad(float degs)
+{
+	return degs * 3.141592653589793f / 180.f;
+}
+bool FileExists(const std::string& fileName)
+{
+	struct stat buffer;
+	return (stat(fileName.c_str(), &buffer) == 0);
+}
+void GET_YTD(std::string name)
+{
+	std::string desktoppath = "C:\\Spectrum\\Texture\\";
+	const std::string fullPath = desktoppath + name;
+	int textureID;
+	if (FileExists(fullPath))
+	{
+		big::g_pointers->m_file_register(&textureID, fullPath.c_str(), true, name.c_str(), false);
+	}
+}
+void load()
+{
+	GET_YTD("Menu_GUI.ytd");
+
+}
+void Sprite(std::string Streamedtexture, std::string textureName, float x, float y, float width, float height, float rotation, int r, int g, int b, int a)
+{
+	if (!GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED((char*)Streamedtexture.c_str()))
+	{
+		GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT((char*)Streamedtexture.c_str(), false);
+	}
+	else
+	{
+		GRAPHICS::DRAW_SPRITE((char*)Streamedtexture.c_str(), (char*)textureName.c_str(), x, y, width, height, rotation, r, g, b, a);
+	}
+}
+vector2 _speedoPosition = { 0.85f, 0.86f };
+vector2& pos = _speedoPosition;
+UINT8 _speedoAlpha = 255;
+vector2 res = { 256 * 0.66 / 1280 ,  256 * 0.66 / 720 };
+void SpeedOTick()
+{
+	load();
+	float speedf = abs(3.6f * ENTITY::GET_ENTITY_SPEED_VECTOR(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), true).y);
+	Sprite("Menu_GUI", "speed", _speedoPosition.x, _speedoPosition.y, res.x, res.y, 0.0f, 255, 255, 255, _speedoAlpha); // Background
+	Sprite("Menu_GUI", "needle", _speedoPosition.x, _speedoPosition.y, res.x, res.y, speedf > 270.0f ? 270.6f : speedf, 255, 255, 255, _speedoAlpha); // Needle
+}
+Vehicle nearbyveh()
+{
+	const int ElementAmount = 10;
+	const int ArrSize = ElementAmount * 2 + 2;
+
+	Vehicle* vehs = new Vehicle[ArrSize];
+	vehs[0] = ElementAmount;
+	int VehFound = PED::GET_PED_NEARBY_VEHICLES(PLAYER::PLAYER_PED_ID(), vehs);
+
+	for (int i = 0; i < VehFound; i++)
+	{
+		int OffsetID = i * 2 + 2;
+		if (vehs[OffsetID] != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false))
+		{
+			Vehicle nearbyveh_ = vehs[OffsetID];
+			return vehs[OffsetID];
+			return nearbyveh_;
+		}
+	}
+}
+Ped nearbypeds()
+{
+	Player playerPed = PLAYER::PLAYER_PED_ID();
+	const int numElements = 10;
+	const int arrSize = numElements * 2 + 2;
+	//Start at index 2, and the odd elements are padding
+	int peds[arrSize];
+	//0 index is the size of the array
+	peds[0] = numElements;
+	int count = PED::GET_PED_NEARBY_PEDS(PLAYER::PLAYER_PED_ID(), peds, -1);
+	for (int i = 0; i < count; ++i)
+	{
+		int offsettedID = i * 2 + 2;
+		if (ENTITY::DOES_ENTITY_EXIST(peds[offsettedID]))
+		{
+			return peds[offsettedID];
+		}
+	}
+}
+void RequestControlOfid(Entity netid)
+{
+	int tick = 0;
+
+	while (!NETWORK::NETWORK_HAS_CONTROL_OF_NETWORK_ID(netid) && tick <= 25)
+	{
+		NETWORK::NETWORK_REQUEST_CONTROL_OF_NETWORK_ID(netid);
+		tick++;
+	}
+}
+void teleport_to_coords(Entity e, Vector3 coords)
+{
+	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, coords.x, coords.y, coords.z, 0, 0, 1);
+}
+Vector3 get_blip_marker()
+{
+	static Vector3 zero;
+	Vector3 coords;
+
+	bool blipFound = false;
+	// search for marker blip
+	int blipIterator = UI::_GET_BLIP_INFO_ID_ITERATOR();
+	for (Blip i = UI::GET_FIRST_BLIP_INFO_ID(blipIterator); UI::DOES_BLIP_EXIST(i) != 0; i = UI::GET_NEXT_BLIP_INFO_ID(blipIterator))
+	{
+		if (UI::GET_BLIP_INFO_ID_TYPE(i) == 4)
+		{
+			coords = UI::GET_BLIP_INFO_ID_COORD(i);
+			blipFound = true;
+			break;
+		}
+	}
+	if (blipFound)
+	{
+		waypoint = true;
+		return coords;
+	}
+	else
+	{
+		waypoint = false;
+	}
+
+	return zero;
+}
+Blip set_blip(Entity entity, int alpha, int colour, bool toggleSaveEntity)
+{
+	Blip EntityBlip = UI::ADD_BLIP_FOR_ENTITY(entity);
+	Hash model = ENTITY::GET_ENTITY_MODEL(entity);
+	if (VEHICLE::IS_THIS_MODEL_A_CAR(model))//car
+		UI::SET_BLIP_SPRITE(EntityBlip, 225);
+	else if (VEHICLE::IS_THIS_MODEL_A_BIKE(model) //bike
+		|| VEHICLE::IS_THIS_MODEL_A_BICYCLE(model))//bicycle
+		UI::SET_BLIP_SPRITE(EntityBlip, 226);
+	else if (VEHICLE::IS_THIS_MODEL_A_BOAT(model))//boat
+		UI::SET_BLIP_SPRITE(EntityBlip, 427);
+	else if (VEHICLE::IS_THIS_MODEL_A_HELI(model))//heil
+		UI::SET_BLIP_SPRITE(EntityBlip, 64);
+	else if (VEHICLE::IS_THIS_MODEL_A_PLANE(model))//plane
+		UI::SET_BLIP_SPRITE(EntityBlip, 307);
+	else if (VEHICLE::IS_THIS_MODEL_A_QUADBIKE(model))//ATV
+		UI::SET_BLIP_SPRITE(EntityBlip, 147);
+	else if (ENTITY::IS_ENTITY_A_VEHICLE(model))//if you can drive it set it as car icon
+		UI::SET_BLIP_SPRITE(EntityBlip, 225);
+	else
+		UI::SET_BLIP_SPRITE(EntityBlip, 1);
+	if (toggleSaveEntity)
+		ENTITY::SET_ENTITY_AS_MISSION_ENTITY(entity, NULL, NULL);
+	UI::SET_BLIP_ALPHA(EntityBlip, alpha);
+	UI::SET_BLIP_COLOUR(EntityBlip, colour);
+	return 	EntityBlip;
+}
+#define IM_PRINTFARGS(FMT)
+
+
+ImGuiTextBuffer     Buf;
+bool                ScrollToBottom;
+
+void Clear() { Buf.clear(); }
+
+std::string line = "\n";
+
+void AddLog(const char* fmt, ...) IM_PRINTFARGS(2)
+{
+	va_list args;
+	va_start(args, fmt);
+	Buf.appendfv(StringToChar(fmt + line), args);
+	va_end(args);
+	ScrollToBottom = true;
+}
+void RequestControlOfEnt(Entity entity)
+{
+	int tick = 0;
+	while (!NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(entity) && tick <= 25)
+	{
+		NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(entity);
+		tick++;
+	}
+	if (NETWORK::NETWORK_IS_SESSION_STARTED())
+	{
+		int netID = NETWORK::NETWORK_GET_NETWORK_ID_FROM_ENTITY(entity);
+		RequestControlOfid(netID);
+		NETWORK::SET_NETWORK_ID_CAN_MIGRATE(netID, 1);
+	}
+}
+void TickFunctions()
+{
+	LocalTick();
+	SpeedOTick();
+	vehfunctions();
+	if (GetAsyncKeyState(VK_KEY_X))
+		CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
+}
+
+
+#pragma once
+#include "common.hpp"
+#include "./memory/Offset.hpp"
+#include"./gta/enums.hpp"
+#include "script.hpp"
+#include "fiber_pool.hpp"
+#include "natives.hpp"
+#include "gta_util.hpp"
+#include "gui.hpp"
+#include <script_global.hpp>
+extern int selectedPlayer;
+
+
+
+extern void TickFunctions();
+extern float degToRad(float degs);
+extern Vehicle nearbyveh();
+extern Ped nearbypeds();
+extern void RequestControlOfEnt(Entity entity);
+extern void RequestControlOfid(Entity netid);
+inline bool waypoint{};
+Vector3 get_blip_marker();
+void teleport_to_coords(Entity e, Vector3 coords);
+Blip set_blip(Entity entity, int alpha, int colour, bool toggleSaveEntity);
+
+extern void LocalTick();
+extern void LocalSub();
+extern void ClothingMenu();
+extern void TimecycleModifiers();
+extern void PickedAnimLIST();
+extern void PedAnimList();
+extern void ModelMenu();
+extern void AnimalModels();
+extern void AmbientFemale();
+extern void AmbientMale();
+extern void Cutscene();
+extern void GangFemale();
+extern void GangMale();
+extern void Story();
+extern void Multiplayer();
+extern void ScenarioFemale();
+extern void ScenarioMale();
+extern void StoryScenarioFemale();
+extern void StoryScenarioMale();
+extern void other();
+
+
+void VehicleMainSub();
+void vehfunctions();
+extern void PickingVehicleMenu();
+extern void PickedVehicleMenu();
+extern void VehicleCustomsMain();
+extern void SelectedVehicleMod();
+
+//0x000 - ?
+//0x004 - toe
+const int offsetCamber = 0x008;
+//0x00C - padding? Can't see difference + no change @ bump
+const int offsetCamberInv = 0x010; // 
+//0x014 - offsetYPos but also affects camber?
+//0x018 - height-related?
+//0x01C - padding? Can't see difference + no change @ bump
+const int offsetTrackWidth2 = 0x020; // Same as 0x030, can't see difference tho
+//0x024 - ???
+//0x02C - padding? Can't see difference + no change @ bump
+//0x028 - height + 0x128?
+const int offsetTrackWidth = 0x030;
+const int offsetYPos = 0x034;
+const int offsetHeight = 0x038; // affected by hydraulics! 0x028 also.
+//0x03C - padding? Can't see difference + no change @ bump
+//0x128 - physics-related?
+//0x12C - ??
+//0x130 - stiffness?
+
+const int offTyreRadius = 0x110;
+const int offRimRadius = 0x114;
+const int offTyreWidth = 0x118;
+
+
+static void DisableControls()
+{
+	//selective disabled
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 12, true); //ControlWeaponWheelUpDown
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 13, true); //ControlWeaponWheelLeftRight
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 14, true); //ControlWeaponWheelNext
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 15, true); //ControlWeaponWheelPrev
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 16, true); //CONTROLSelectNextWeapon
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 17, true); //CONTROLSelectPrevWeapon
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 263, true); //ControlMeleeAttack1
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 264, true); //ControlMeleeAttack2
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 257, true); //ControlAttack2
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 24, true); //ControlAttack
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 25, true); //ControlAim
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 140, true); //ControlMeleeAttackLight
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 141, true); //ControlMeleeAttackHeavy
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 142, true); //ControlMeleeAttackAlternate
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 144, true); //ControlParachuteDeploy
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 145, true); //ControlParachuteDetach
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 81, true); //ControlVehiclePrevRadio
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 82, true); //ControlVehicleRadioWheel
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 332, true); //ControlRadioWheelUpDown
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 333, true); //ControlRadioWheelLeftRight
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 53, true); // ControlWeaponSpecial
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 54, true); // ControlWeaponSpecial2
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 37, true); // CONTROLSelectWeapon
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 56, true); // ControlDropWeapon
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 262, true); // ControlNextWeapon
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 261, true); // ControlPrevWeapon
+	// always disabed while open
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 19, true); // ControlCharacterWheel
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 23, true); // ControlEnter
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 27, true); // CControlPhone
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 44, true); // ControlCover
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 45, true); //ControlReload
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 58, true); //ControlThrowGrenade
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 51, true); //ControlContext
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 52, true); // ControlContextSecondary
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 75, true); //ControlVehicleExit
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 80, true); //ControlVehicleCinCam
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 85, true); // ControlVehicleRadioWheel
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 180, true); //
+
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 245, true); //ControlMpTextChatAll
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 246, true); // ControlMpTextChatTeam
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 247, true); // ControlMpTextChatFriends
+	CONTROLS::DISABLE_CONTROL_ACTION(2, 248, true); // ControlMpTextChatCrew
+
+
+	UI::HIDE_HUD_AND_RADAR_THIS_FRAME();
+	UI::_REMOVE_NOTIFICATION(UI::_GET_CURRENT_NOTIFICATION());
+}
+
+static char* VehicleList[]
+{
+	"pfister811" ,
+	"adder" ,
+	"autarch" ,
+	"banshee2" ,
+	"bullet" ,
+	"cheetah" ,
+	"cyclone" ,
+	"deveste" ,
+	"emerus" ,
+	"entityxf" ,
+	"entity2" ,
+	"sheava" ,
+	"fmj" ,
+	"furia" ,
+	"gp1" ,
+	"infernus" ,
+	"italigtb" ,
+	"italigtb2" ,
+	"italirsx" ,
+	"krieger" ,
+	"osiris" ,
+	"nero" ,
+	"nero2" ,
+	"penetrator",
+	"openwheel1",
+	"openwheel2",
+	"formula" ,
+	"formula2" ,
+	"le7b" ,
+	"reaper" ,
+	"voltic2" ,
+	"s80" ,
+	"sc1" ,
+	"scramjet" ,
+	"sultanrs" ,
+	"t20" ,
+	"taipan" ,
+	"tempesta" ,
+	"tezeract" ,
+	"thrax" ,
+	"turismor" ,
+	"tyrant" ,
+	"tyrus" ,
+	"vacca" ,
+	"vagner" ,
+	"vigilante" ,
+	"visione" ,
+	"voltic" ,
+	"prototipo" ,
+	"xa21" ,
+	"zentorno" ,
+	"zorrusso" ,
+	"drafter" ,
+	"ninef" ,
+	"ninef2" ,
+	"alpha" ,
+	"zr380" ,
+	"banshee" ,
+	"bestiagts" ,
+	"blista2" ,
+	"buffalo" ,
+	"buffalo2" ,
+	"carbonizzare" ,
+	"comet2" ,
+	"comet3" ,
+	"comet4" ,
+	"comet5" ,
+	"coquette" ,
+	"tampa2" ,
+	"elegy" ,
+	"elegy2" ,
+	"feltzer2" ,
+	"flashgt" ,
+	"furoregt" ,
+	"fusilade" ,
+	"futo" ,
+	"zr3802" ,
+	"gb200" ,
+	"blista3" ,
+	"hotring" ,
+	"imorgon" ,
+	"issi7" ,
+	"italigto" ,
+	"jester" ,
+	"jester2" ,
+	"jester3" ,
+	"jugular" ,
+	"khamelion" ,
+	"komoda" ,
+	"kuruma" ,
+	"kuruma2" ,
+	"locust" ,
+	"lynx" ,
+	"massacro" ,
+	"massacro2" ,
+	"neo" ,
+	"neon" ,
+	"zr3803" ,
+	"omnis" ,
+	"paragon" ,
+	"paragon2" ,
+	"pariah" ,
+	"penumbra" ,
+	"raiden" ,
+	"rapidgt" ,
+	"rapidgt2" ,
+	"raptor" ,
+	"revolter" ,
+	"ruston" ,
+	"schafter4" ,
+	"schafter3" ,
+	"schlagen" ,
+	"schwarzer" ,
+	"sentinel3" ,
+	"seven70" ,
+	"specter" ,
+	"specter2" ,
+	"buffalo3" ,
+	"streiter" ,
+	"sugoi" ,
+	"sultan" ,
+	"sultan2" ,
+	"surano" ,
+	"toreador" ,
+	"tropos" ,
+	"veto" ,
+	"veto2" ,
+	"vstr" ,
+	"verlierer2" ,
+	"z190" ,
+	"ardent" ,
+	"casco" ,
+	"cheburek" ,
+	"cheetah2" ,
+	"coquette2" ,
+	"deluxo" ,
+	"dynasty" ,
+	"fagaloa" ,
+	"btype2" ,
+	"gt500" ,
+	"infernus2" ,
+	"jb700" ,
+	"jb7002" ,
+	"mamba" ,
+	"manana" ,
+	"michelli" ,
+	"monroe" ,
+	"nebula" ,
+	"peyote" ,
+	"pigalle" ,
+	"rapidgt3" ,
+	"retinue" ,
+	"retinue2" ,
+	"btype" ,
+	"btype3" ,
+	"savestra" ,
+	"stinger" ,
+	"stingergt" ,
+	"feltzer3" ,
+	"stromberg" ,
+	"swinger" ,
+	"torero" ,
+	"tornado" ,
+	"tornado2" ,
+	"tornado3" ,
+	"tornado4" ,
+	"tornado5" ,
+	"tornado6" ,
+	"turismo2" ,
+	"viseris" ,
+	"ztype" ,
+	"zion3" ,
+	"bison" ,
+	"bison2" ,
+	"bison3" ,
+	"contender" ,
+	"guardian" ,
+	"picador" ,
+	"sadler" ,
+	"sadler2" ,
+	"slamvan" ,
+	"slamvan3" ,
+	"yosemite" ,
+	"boxville5" ,
+	"bison" ,
+	"bison2" ,
+	"bison3" ,
+	"bobcatxl" ,
+	"boxville" ,
+	"boxville2" ,
+	"boxville3" ,
+	"boxville4" ,
+	"burrito" ,
+	"burrito2" ,
+	"burrito3" ,
+	"burrito4" ,
+	"burrito5" ,
+	"camper" ,
+	"speedo2" ,
+	"gburrito" ,
+	"gburrito2" ,
+	"journey" ,
+	"minivan" ,
+	"minivan2" ,
+	"paradise" ,
+	"pony" ,
+	"pony2" ,
+	"rumpo" ,
+	"rumpo2" ,
+	"rumpo3" ,
+	"speedo" ,
+	"speedo4" ,
+	"surfer" ,
+	"surfer2" ,
+	"taco" ,
+	"youga" ,
+	"youga2" ,
+	"baller" ,
+	"baller2" ,
+	"baller3" ,
+	"baller5" ,
+	"baller4" ,
+	"baller6" ,
+	"bjxl" ,
+	"cavalcade" ,
+	"cavalcade2" ,
+	"contender" ,
+	"dubsta" ,
+	"dubsta2" ,
+	"fq2" ,
+	"granger" ,
+	"gresley" ,
+	"habanero" ,
+	"huntley" ,
+	"landstalker" ,
+	"mesa" ,
+	"mesa2" ,
+	"novak" ,
+	"patriot" ,
+	"patriot2" ,
+	"radi" ,
+	"rebla" ,
+	"rocoto" ,
+	"seminole" ,
+	"serrano" ,
+	"squaddie" ,
+	"toros" ,
+	"xls" ,
+	"xls2" ,
+	"armytanker" ,
+	"armytrailer" ,
+	"armytrailer2" ,
+	"baletrailer" ,
+	"boattrailer" ,
+	"docktrailer" ,
+	"freighttrailer" ,
+	"graintrailer" ,
+	"proptrailer" ,//no pic
+	"raketrailer" ,
+	"tanker" ,
+	"tanker2" ,
+	"tr2" ,
+	"tr3" ,
+	"tr4" ,
+	"trailerlogs" ,
+	"trailers" ,
+	"trailers2" ,
+	"trailers3" ,
+	"trailers4" ,
+	"trailerlarge" ,//nopic
+	"trailersmall" ,
+	"trailersmall2" ,//nopic
+	"trflat" ,
+	"tvtrailer" ,
+	"freight" ,
+	"freightcar" ,//no pic
+	"freightcont1" ,//no pic
+	"freightcont2" ,//no pic
+	"freightgrain" ,//no pic
+	"metrotrain" ,//no pic
+	"tankercar" ,//no pic
+	"avisa" ,
+	"dinghy" ,
+	"dinghy2" ,
+	"dinghy3" ,
+	"dinghy4" ,
+	"dinghy5" ,
+	"patrolboat" ,
+	"kosatka" ,
+	"jetmax" ,
+	"longfin" ,
+	"submersible2" ,
+	"marquis" ,
+	"predator" ,
+	"seashark" ,
+	"seashark2" ,
+	"seashark3" ,
+	"speeder" ,
+	"speeder2" ,
+	"squalo" ,
+	"submersible" ,
+	"suntrap" ,
+	"toro" ,
+	"toro2" ,
+	"tropic" ,
+	"tropic2" ,
+	"tug" ,
+	"cerberus" ,
+	"benson" ,
+	"biff" ,
+	"cutter" ,
+	"handler" ,
+	"dump" ,
+	"flatbed" ,
+	"cerberus2" ,
+	"guardian" ,
+	"hauler" ,
+	"hauler2" ,
+	"mixer" ,
+	"mixer2" ,
+	"mule" ,
+	"mule2" ,
+	"mule3" ,
+	"mule4" ,
+	"cerberus3" ,
+	"packer" ,
+	"phantom" ,
+	"phantom3" ,
+	"phantom2" ,
+	"pounder" ,
+	"pounder2" ,
+	"rubble" ,
+	"stockade" ,
+	"stockade3" ,
+	"terbyte" ,
+	"tiptruck" ,
+	"tiptruck2" ,
+	"asbo" ,
+	"issi4" ,
+	"blista" ,
+	"brioso" ,
+	"brioso2" ,
+	"kanjo" ,
+	"dilettante" ,
+	"dilettante2" ,
+	"issi5" ,
+	"issi2" ,
+	"issi3" ,
+	"issi6" ,
+	"panto" ,
+	"prairie" ,
+	"rhapsody" ,
+	"weevil" ,
+	"cogcabrio" ,
+	"exemplar" ,
+	"f620" ,
+	"felon" ,
+	"felon2" ,
+	"jackal" ,
+	"oracle" ,
+	"oracle2" ,
+	"sentinel2" ,
+	"sentinel" ,
+	"windsor" ,
+	"windsor2" ,
+	"zion" ,
+	"zion2" ,
+	"bmx" ,
+	"cruiser" ,
+	"tribike2" ,
+	"fixter" ,
+	"scorcher" ,
+	"tribike3" ,
+	"tribike" ,
+	"scarab" ,
+	"apc" ,
+	"ambulance" ,
+	"barracks" ,
+	"barracks2" ,
+	"barrage" ,
+	"chernobog" ,
+	"crusader" ,
+	"fbi" ,
+	"fbi2" ,
+	"firetruk" ,
+	"halftrack" ,
+	"scarab2" ,
+	"lguard" ,
+	"scarab3" ,
+	"pranger" ,
+	"policeb" ,
+	"police2" ,
+	"police" ,
+	"police3" ,
+	"policeold1" ,
+	"riot" ,
+	"policeold2" ,
+	"policet" ,
+	"pbus" ,
+	"minitank" ,
+	"riot2" ,
+	"rhino" ,
+	"sheriff" ,
+	"sheriff2" ,
+	"thruster" ,
+	"khanjali" ,
+	"police4" ,
+	"akula" ,
+	"alkonost" ,
+	"annihilator2" ,
+	"annihilator" ,
+	"buzzard2" ,
+	"buzzard" ,
+	"cargobob" ,
+	"cargobob2" ,
+	"cargobob3" ,
+	"cargobob4" ,
+	"hunter" ,
+	"frogger" ,
+	"frogger2" ,
+	"havok" ,
+	"maverick" ,
+	"polmav" ,
+	"savage" ,
+	"seasparrow" ,
+	"seasparrow2" ,
+	"seasparrow3" ,
+	"skylift" ,
+	"supervolito" ,
+	"supervolito2" ,
+	"swift" ,
+	"swift2" ,
+	"valkyrie" ,
+	"valkyrie2" ,
+	"volatus" ,
+	"akuma" ,
+	"deathbike" ,
+	"avarus" ,
+	"bagger" ,
+	"bati" ,
+	"bati2" ,
+	"bf400" ,
+	"carbonrs" ,
+	"chimera" ,
+	"cliffhanger" ,
+	"daemon" ,
+	"daemon2" ,
+	"defiler" ,
+	"diablous" ,
+	"diablous2" ,
+	"double" ,
+	"enduro" ,
+	"esskey" ,
+	"faggio2" ,
+	"faggio3" ,
+	"faggio" ,
+	"fcr" ,
+	"fcr2" ,
+	"deathbike2" ,
+	"gargoyle" ,
+	"hakuchou" ,
+	"hakuchou2" ,
+	"hexer" ,
+	"innovation" ,
+	"lectro" ,
+	"manchez" ,
+	"manchez2" ,
+	"nemesis" ,
+	"nightblade" ,
+	"deathbike3" ,
+	"oppressor" ,
+	"oppressor2" ,
+	"pcj" ,
+	"rrocket" ,
+	"ratbike" ,
+	"ruffian" ,
+	"sanchez" ,
+	"sanchez2" ,
+	"sanctus" ,
+	"shotaro" ,
+	"sovereign" ,
+	"stryder" ,
+	"thrust" ,
+	"vader" ,
+	"vindicator" ,
+	"vortex" ,
+	"wolfsbane" ,
+	"zombiea" ,
+	"zombieb" ,
+	"dominator4" ,
+	"impaler2" ,
+	"imperator" ,
+	"slamvan4" ,
+	"blade" ,
+	"buccaneer" ,
+	"buccaneer2" ,
+	"stalion2" ,
+	"chino" ,
+	"chino2" ,
+	"clique" ,
+	"coquette3" ,
+	"deviant" ,
+	"dominator" ,
+	"dominator3" ,
+	"yosemite2" ,
+	"dukes2" ,
+	"dukes" ,
+	"ellie" ,
+	"faction" ,
+	"faction2" ,
+	"faction3" ,
+	"dominator5" ,
+	"impaler3" ,
+	"imperator2" ,
+	"slamvan5" ,
+	"gauntlet" ,
+	"gauntlet3" ,
+	"gauntlet4" ,
+	"hermes" ,
+	"hotknife" ,
+	"hustler" ,
+	"impaler" ,
+	"slamvan2" ,
+	"lurcher" ,
+	"moonbeam" ,
+	"moonbeam2" ,
+	"dominator6" ,
+	"impaler4" ,
+	"imperator3" ,
+	"slamvan6" ,
+	"nightshade" ,
+	"peyote2" ,
+	"phoenix" ,
+	"picador" ,
+	"dominator2" ,
+	"ratloader" ,
+	"ratloader2" ,
+	"gauntlet2" ,
+	"ruiner" ,//nopic
+	"ruiner3" ,
+	"ruiner2" ,
+	"sabregt" ,
+	"sabregt2" ,
+	"slamvan" ,
+	"slamvan3" ,
+	"stalion" ,
+	"tampa" ,
+	"tulip" ,
+	"vamos" ,
+	"vigero" ,
+	"virgo" ,
+	"virgo3" ,
+	"virgo2" ,
+	"voodoo" ,
+	"voodoo2" ,
+	"tampa3" ,
+	"yosemite" ,
+	"bruiser" ,
+	"brutus" ,
+	"monster3" ,
+	"bifta" ,
+	"blazer" ,
+	"blazer5" ,
+	"blazer2" ,
+	"bodhi2" ,
+	"brawler" ,
+	"caracara" ,
+	"caracara2" ,
+	"trophytruck2" ,
+	"dubsta3" ,
+	"dune" ,
+	"dune3" ,
+	"dloader" ,
+	"everon" ,
+	"freecrawler" ,
+	"bruiser2" ,
+	"brutus2" ,
+	"monster4" ,
+	"hellion" ,
+	"blazer3" ,
+	"bfinjection" ,
+	"insurgent" ,
+	"insurgent2" ,
+	"insurgent3" ,
+	"kalahari" ,
+	"kamacho" ,
+	"monster" ,
+	"marshall" ,
+	"menacer" ,
+	"mesa3" ,
+	"bruiser3" ,
+	"brutus3" ,
+	"monster5" ,
+	"nightshark" ,
+	"outlaw" ,
+	"dune4" ,
+	"dune5" ,
+	"rancherxl" ,
+	"rancherxl2" ,
+	"rcbandito" ,
+	"rebel2" ,
+	"riata" ,
+	"rebel" ,
+	"sandking2" ,
+	"sandking" ,
+	"dune2" ,
+	"blazer4" ,
+	"technical" ,
+	"technical2" ,
+	"technical3" ,
+	"trophytruck" ,
+	"vagrant" ,
+	"verus" ,
+	"winky" ,
+	"zhaba" ,
+	"alphaz1" ,
+	"blimp" ,
+	"avenger" ,
+	"avenger2" ,
+	"strikeforce" ,
+	"besra" ,
+	"blimp3" ,
+	"cargoplane" ,
+	"cuban800" ,
+	"dodo" ,
+	"duster" ,
+	"howard" ,
+	"hydra" ,
+	"jet" ,
+	"starling" ,
+	"luxor" ,
+	"luxor2" ,
+	"stunt" ,
+	"mammatus" ,
+	"miljet" ,
+	"mogul" ,
+	"nimbus" ,
+	"nokota" ,
+	"lazer" ,
+	"pyro" ,
+	"bombushka" ,
+	"rogue" ,
+	"seabreeze" ,
+	"shamal" ,
+	"titan" ,
+	"tula" ,
+	"microlight" ,
+	"molotok" ,
+	"velum" ,
+	"velum2" ,
+	"vestra" ,
+	"volatol" ,
+	"blimp2" ,
+	"asea" ,
+	"asea2" ,
+	"asterope" ,
+	"cognoscenti" ,
+	"cognoscenti2" ,
+	"cog55" ,
+	"cog552" ,
+	"emperor" ,
+	"emperor2" ,
+	"emperor3" ,
+	"fugitive" ,
+	"glendale" ,
+	"ingot" ,
+	"intruder" ,
+	"premier" ,
+	"primo" ,
+	"primo2" ,
+	"regina" ,
+	"romero" ,
+	"schafter2" ,
+	"schafter6" ,
+	"schafter5" ,
+	"stafford" ,
+	"stanier" ,
+	"stratum" ,
+	"stretch" ,
+	"superd" ,
+	"surge" ,
+	"tailgater" ,
+	"limo2" ,
+	"warrener" ,
+	"washington" ,
+	"airbus" ,
+	"airtug" ,
+	"brickade" ,
+	"bulldozer" ,
+	"bus" ,
+	"cablecar" ,
+	"caddy" ,
+	"caddy2" ,
+	"caddy3" ,
+	"coach" ,
+	"docktug" ,
+	"rallytruck" ,
+	"pbus2" ,
+	"tractor2" ,
+	"tractor3" ,
+	"forklift" ,
+	"mower" ,
+	"rentalbus" ,
+	"ripley" ,
+	"sadler" ,
+	"sadler2" ,
+	"scrap" ,
+	"slamtruck" ,
+	"taxi" ,
+	"tourbus" ,
+	"towtruck2" ,
+	"towtruck" ,
+	"tractor" ,
+	"trash" ,
+	"trash2" ,
+	"utillitruck" ,
+	"utillitruck2" ,
+	"utillitruck3" ,
+	"wastelander" ,
+};
+
+
+#include "common.hpp"
+#include "natives.hpp"
+#include "gui.hpp"
+#include "MenuFunctions.hpp"
+#include <imgui.h>
+#include <imgui_internal.h>
+#include <d3d11.h>
+#include <renderer.hpp>
+
+using namespace big;
+using namespace std;
+
+//Skins
+bool SetModel(std::string skinName, char* option)
+{
+	if (Option(option))
+	{
+		
+		
+			DWORD model = GAMEPLAY::GET_HASH_KEY((char*)skinName.c_str());
+			if (STREAMING::IS_MODEL_IN_CDIMAGE(model) && STREAMING::IS_MODEL_VALID(model))
+			{
+				STREAMING::REQUEST_MODEL(model);
+				while (!STREAMING::HAS_MODEL_LOADED(model))
+				{
+					script::get_current()->yield();
+				}
+
+				Vehicle veh = NULL;
+				if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0))
+				{
+					veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID());
+				}
+
+				PLAYER::SET_PLAYER_MODEL(PLAYER::PLAYER_ID(), model);
+				//PED::SET_PED_RANDOM_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID(), FALSE);
+				PED::SET_PED_DEFAULT_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID());
+
+				
+
+				if (veh != NULL)
+				{
+					PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), veh, -1);
+				}
+
+				
+				STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
+
+				return true;
+			}
+	}
+	return false;
+}
+
+
+
+void ModelMenu()
+{
+	SubMenuOption("Animal Models", AModel_SUB);
+	SubMenuOption("Ambient Female Models", AmbientFemale_SUB);
+	SubMenuOption("Ambient Male Models", AmbientMale_SUB);
+	SubMenuOption("Cutscene Models", Cutscene_SUB);
+	SubMenuOption("Gang Female Models", GangFemale_SUB);
+	SubMenuOption("Gang Male Models", GangMale_SUB);
+	SubMenuOption("Story Models", Story_SUB);
+	SubMenuOption("Multiplayer Models", Multiplayer_SUB);
+	SubMenuOption("Scenario Female Models", ScenarioFemale_SUB);
+	SubMenuOption("Scenario Male Models", ScenarioMale_SUB);
+	SubMenuOption("Story Scenario Female Models", StoryScenarioFemale_SUB);
+	SubMenuOption("Story Scenario Male Models", StoryScenarioMale_SUB);
+	SubMenuOption("Other Models", other_SUB);
+	End("Model List");
+
+}
+//thanks fr0hawk boooo for doing models
+void AnimalModels()//Done
+{
+	/*SetModel("Cat", 1462895032);
+	SetModel("Boar", -832573324);
+	SetModel("Cormorant", 1457690978);
+	SetModel("Cow", -50684386);
+	SetModel("Coyote", 1682622302);
+	SetModel("Crow", 402729631);
+	SetModel("Deer", -664053099);
+	SetModel("Fish", 802685111);
+	SetModel("Dolphin", -1950698411);
+	SetModel("HammerShark", 1015224100);
+	SetModel("Hen", 1794449327);
+	SetModel("Humpback", 1193010354);
+	SetModel("Husky", 1318032802);
+	SetModel("KillerWhale", -1920284487);
+	SetModel("MountainLion", 307287994);
+	SetModel("Pig", -1323586730);
+	SetModel("Pigeon", 111281960);
+	SetModel("Poodle", 1125994524);
+	SetModel("Pug", 1832265812);
+	SetModel("Rabbit", -541762431);
+	SetModel("Rat", -1011537562);
+	SetModel("Retriever", 882848737);
+	SetModel("Rhesus", -1026527405);
+	SetModel("Rottweiler", -1788665315);
+	SetModel("Seagull", -745300483);
+	SetModel("Shepherd", 1126154828);
+	SetModel("Stingray", -1589092019);
+	SetModel("TigerShark", 113504370);
+	SetModel("Westy", -1384627013);*/
+}
+void AmbientFemale()
+{
+	SetModel("a_f_m_beach_01", "Beach Female");
+	SetModel("a_f_m_trampbeac_01", "Beach Tramp Female");
+	SetModel("a_f_y_beach_01", "Beach Young Female");
+	SetModel("a_f_m_bevhills_01", "Beverly Hills Female");
+	SetModel("a_f_m_bevhills_02", "Beverly Hills Female 2");
+	SetModel("a_f_y_bevhills_01", "Beverly Hills Young Female");
+	SetModel("a_f_y_bevhills_02", "Beverly Hills Young Female 2");
+	SetModel("a_f_y_bevhills_03", "Beverly Hills Young Female 3");
+	SetModel("a_f_y_bevhills_04", "Beverly Hills Young Female 4");
+	SetModel("a_f_m_bodybuild_01", "Bodybuilder Female");
+	SetModel("a_f_m_business_02", "Business Female 2");
+	SetModel("a_f_y_business_01", "Business Young Female");
+	SetModel("a_f_y_business_02", "Business Young Female 2");
+	SetModel("a_f_y_business_03", "Business Young Female 3");
+	SetModel("a_f_y_business_04", "Business Young Female 4");
+	SetModel("a_f_m_downtown_01", "Downtown Female");
+	SetModel("a_f_y_scdressy_01", "Dressy Female");
+	SetModel("a_f_m_eastsa_01", "East SA Female");
+	SetModel("a_f_m_eastsa_02", "East SA Female 2");
+	SetModel("a_f_y_eastsa_01", "East SA Young Female");
+	SetModel("a_f_y_eastsa_02", "East SA Young Female 2");
+	SetModel("a_f_y_eastsa_03", "East SA Young Female 3");
+	SetModel("a_f_y_epsilon_01", "Epsilon Female");
+	SetModel("a_f_m_fatbla_01", "Fat Black Female");
+	SetModel("a_f_m_fatcult_01", "Fat Cult Female");
+	SetModel("a_f_m_fatwhite_01", "Fat White Female");
+	SetModel("a_f_y_femaleagent", "Female Agent");
+	SetModel("a_f_y_fitness_01", "Fitness Female");
+	SetModel("a_f_y_fitness_02", "Fitness Female 2");
+	SetModel("a_f_y_genhot_01", "General Hot Young Female");
+	SetModel("a_f_o_genstreet_01", "General Street Old Female");
+	SetModel("a_f_y_gencaspat_01", "Casual Casino Guest");
+	SetModel("a_f_y_smartcaspat_01", "Formel Casino Guest");
+	SetModel("a_f_y_golfer_01", "Golfer Young Female");
+	SetModel("a_f_y_hiker_01", "Hiker Female");
+	SetModel("a_f_y_hippie_01", "Hippie Female");
+	SetModel("a_f_y_hipster_01", "Hipster Female");
+	SetModel("a_f_y_hipster_02", "Hipster Female 2");
+	SetModel("a_f_y_hipster_03", "Hipster Female 3");
+	SetModel("a_f_y_hipster_04", "Hipster Female 4");
+	SetModel("a_f_o_indian_01", "Indian Old Female");
+	SetModel("a_f_y_indian_01", "Indian Young Female");
+	SetModel("a_f_y_runner_01", "Jogger Female");
+	SetModel("a_f_y_juggalo_01", "Juggalo Female");
+	SetModel("a_f_m_ktown_01", "Korean Female");
+	SetModel("a_f_m_ktown_02", "Korean Female 2");
+	SetModel("a_f_o_ktown_01", "Korean Old Female");
+	SetModel("a_f_m_prolhost_01", "Prologue Host Female");
+	SetModel("a_f_y_rurmeth_01", "Rural Meth Addict Female");
+	SetModel("a_f_m_salton_01", "Salton Female");
+	SetModel("a_f_o_salton_01", "Salton Old Female");
+	SetModel("a_f_y_skater_01", "Skater Female");
+	SetModel("a_f_m_skidrow_01", "Skid Row Female");
+	SetModel("a_f_m_soucent_01", "South Central Female");
+	SetModel("a_f_m_soucent_02", "South Central Female 2");
+	SetModel("a_f_m_soucentmc_01", "South Central MC Female");
+	SetModel("a_f_o_soucent_01", "South Central Old Female");
+	SetModel("a_f_o_soucent_02", "South Central Old Female 2");
+	SetModel("a_f_y_soucent_01", "South Central Young Female");
+	SetModel("a_f_y_soucent_02", "South Central Young Female 2");
+	SetModel("a_f_y_soucent_03", "South Central Young Female 3");
+	SetModel("a_f_y_tennis_01", "Tennis Player Female");
+	SetModel("a_f_y_topless_01", "Topless");
+	SetModel("a_f_m_tourist_01", "Tourist Female");
+	SetModel("a_f_y_tourist_01", "Tourist Young Female");
+	SetModel("a_f_y_tourist_02", "Tourist Young Female 2");
+	SetModel("a_f_m_tramp_01", "Tramp Female");
+	SetModel("a_f_y_vinewood_01", "Vinewood Female");
+	SetModel("a_f_y_vinewood_02", "Vinewood Female 2");
+	SetModel("a_f_y_vinewood_03", "Vinewood Female 3");
+	SetModel("a_f_y_vinewood_04", "Vinewood Female 4");
+	SetModel("a_f_y_yoga_01", "Yoga Female");
+	SetModel("a_f_y_clubcust_01", "Club Customer Female 1");
+	SetModel("a_f_y_clubcust_02", "Club Customer Female 2");
+	SetModel("a_f_y_clubcust_03", "Club Customer Female 3");
+}
+void AmbientMale()
+{
+
+	SetModel("a_m_m_afriamer_01", "African American Male");
+	SetModel("a_m_m_acult_01", "Altruist Cult Mid-Age Male");
+	SetModel("a_m_o_acult_01", "Altruist Cult Old Male");
+	SetModel("a_m_o_acult_02", "Altruist Cult Old Male 2");
+	SetModel("a_m_y_acult_01", "Altruist Cult Young Male");
+	SetModel("a_m_y_acult_02", "Altruist Cult Young Male 2");
+	SetModel("a_m_m_beach_01", "Beach Male");
+	SetModel("a_m_m_beach_02", "Beach Male 2");
+	SetModel("a_m_y_musclbeac_01", "Beach Muscle Male");
+	SetModel("a_m_y_musclbeac_02", "Beach Muscle Male 2");
+	SetModel("a_m_m_mlcrisis_01", "Midlife Crisis Casino Bikers");
+	SetModel("a_m_y_gencaspat_01", "Casual Casino Guests");
+	SetModel("a_m_y_smartcaspat_01", "Formel Casino Guests");
+	SetModel("a_m_o_beach_01", "Beach Old Male");
+	SetModel("a_m_m_trampbeac_01", "Beach Tramp Male");
+	SetModel("a_m_y_beach_01", "Beach Young Male");
+	SetModel("a_m_y_beach_02", "Beach Young Male 2");
+	SetModel("a_m_y_beach_03", "Beach Young Male 3");
+	SetModel("a_m_m_bevhills_01", "Beverly Hills Male");
+	SetModel("a_m_m_bevhills_02", "Beverly Hills Male 2");
+	SetModel("a_m_y_bevhills_01", "Beverly Hills Young Male");
+	SetModel("a_m_y_bevhills_02", "Beverly Hills Young Male 2");
+	SetModel("a_m_y_stbla_01", "Black Street Male");
+	SetModel("a_m_y_stbla_02", "Black Street Male 2");
+	SetModel("a_m_y_breakdance_01", "Breakdancer Male");
+	SetModel("a_m_y_busicas_01", "Business Casual");
+	SetModel("a_m_m_business_01", "Business Male");
+	SetModel("a_m_y_business_01", "Business Young Male");
+	SetModel("a_m_y_business_02", "Business Young Male 2");
+	SetModel("a_m_y_business_03", "Business Young Male 3");
+	SetModel("a_m_y_cyclist_01", "Cyclist Male");
+	SetModel("a_m_y_dhill_01", "Downhill Cyclist");
+	SetModel("a_m_y_downtown_01", "Downtown Male");
+	SetModel("a_m_m_eastsa_01", "East SA Male");
+	SetModel("a_m_m_eastsa_02", "East SA Male 2");
+	SetModel("a_m_y_eastsa_01", "East SA Young Male");
+	SetModel("a_m_y_eastsa_02", "East SA Young Male 2");
+	SetModel("a_m_y_epsilon_01", "Epsilon Male");
+	SetModel("a_m_y_epsilon_02", "Epsilon Male 2");
+	SetModel("a_m_m_farmer_01", "Farmer");
+	SetModel("a_m_m_fatlatin_01", "Fat Latino Male");
+	SetModel("a_m_y_gay_01", "Gay Male");
+	SetModel("a_m_y_gay_02", "Gay Male 2");
+	SetModel("a_m_m_genfat_01", "General Fat Male");
+	SetModel("a_m_m_genfat_02", "General Fat Male 2");
+	SetModel("a_m_o_genstreet_01", "General Street Old Male");
+	SetModel("a_m_y_genstreet_01", "General Street Young Male");
+	SetModel("a_m_y_genstreet_02", "General Street Young Male 2");
+	SetModel("a_m_m_golfer_01", "Golfer Male");
+	SetModel("a_m_y_golfer_01", "Golfer Young Male");
+	SetModel("a_m_m_hasjew_01", "Hasidic Jew Male");
+	SetModel("a_m_y_hasjew_01", "Hasidic Jew Young Male");
+	SetModel("a_m_y_hiker_01", "Hiker Male");
+	SetModel("a_m_m_hillbilly_01", "Hillbilly Male");
+	SetModel("a_m_m_hillbilly_02", "Hillbilly Male 2");
+	SetModel("a_m_y_hippy_01", "Hippie Male");
+	SetModel("a_m_y_hipster_01", "Hipster Male");
+	SetModel("a_m_y_hipster_02", "Hipster Male 2");
+	SetModel("a_m_y_hipster_03", "Hipster Male 3");
+	SetModel("a_m_m_indian_01", "Indian Male");
+	SetModel("a_m_y_indian_01", "Indian Young Male");
+	SetModel("a_m_y_jetski_01", "Jetskier");
+	SetModel("a_m_y_runner_01", "Jogger Male");
+	SetModel("a_m_y_runner_02", "Jogger Male 2");
+	SetModel("a_m_y_juggalo_01", "Juggalo Male");
+	SetModel("a_m_m_ktown_01", "Korean Male");
+	SetModel("a_m_o_ktown_01", "Korean Old Male");
+	SetModel("a_m_y_ktown_01", "Korean Young Male");
+	SetModel("a_m_y_ktown_02", "Korean Young Male 2");
+	SetModel("a_m_m_stlat_02", "Latino Street Male 2");
+	SetModel("a_m_y_stlat_01", "Latino Street Young Male");
+	SetModel("a_m_y_latino_01", "Latino Young Male");
+	SetModel("a_m_m_malibu_01", "Malibu Male");
+	SetModel("a_m_y_methhead_01", "Meth Addict");
+	SetModel("a_m_m_mexlabor_01", "Mexican Labourer");
+	SetModel("a_m_m_mexcntry_01", "Mexican Rural");
+	SetModel("a_m_y_mexthug_01", "Mexican Thug");
+	SetModel("a_m_y_motox_01", "Motocross Biker");
+	SetModel("a_m_y_motox_02", "Motocross Biker 2");
+	SetModel("a_m_m_og_boss_01", "OG Boss");
+	SetModel("a_m_m_paparazzi_01", "Paparazzi Male");
+	SetModel("a_m_m_polynesian_01", "Polynesian");
+	SetModel("a_m_y_polynesian_01", "Polynesian Young");
+	SetModel("a_m_m_prolhost_01", "Prologue Host Male");
+	SetModel("a_m_y_roadcyc_01", "Road Cyclist");
+	SetModel("a_m_m_rurmeth_01", "Rural Meth Addict Male");
+	SetModel("a_m_m_salton_01", "Salton Male");
+	SetModel("a_m_m_salton_02", "Salton Male 2");
+	SetModel("a_m_m_salton_03", "Salton Male 3");
+	SetModel("a_m_m_salton_04", "Salton Male 4");
+	SetModel("a_m_o_salton_01", "Salton Old Male");
+	SetModel("a_m_y_salton_01", "Salton Young Male");
+	SetModel("a_m_m_skater_01", "Skater Male");
+	SetModel("a_m_y_skater_01", "Skater Young Male");
+	SetModel("a_m_y_skater_02", "Skater Young Male 2");
+	SetModel("a_m_m_skidrow_01", "Skid Row Male");
+	SetModel("a_m_m_socenlat_01", "South Central Latino Male");
+	SetModel("a_m_m_soucent_01", "South Central Male");
+	SetModel("a_m_m_soucent_02", "South Central Male 2");
+	SetModel("a_m_m_soucent_03", "South Central Male 3");
+	SetModel("a_m_m_soucent_04", "South Central Male 4");
+	SetModel("a_m_o_soucent_01", "South Central Old Male");
+	SetModel("a_m_o_soucent_02", "South Central Old Male 2");
+	SetModel("a_m_o_soucent_03", "South Central Old Male 3");
+	SetModel("a_m_y_soucent_01", "South Central Young Male");
+	SetModel("a_m_y_soucent_02", "South Central Young Male 2");
+	SetModel("a_m_y_soucent_03", "South Central Young Male 3");
+	SetModel("a_m_y_soucent_04", "South Central Young Male 4");
+	SetModel("a_m_y_sunbathe_01", "Sunbather Male");
+	SetModel("a_m_y_surfer_01", "Surfer");
+	SetModel("a_m_m_tennis_01", "Tennis Player Male");
+	SetModel("a_m_m_tourist_01", "Tourist Male");
+	SetModel("a_m_m_tramp_01", "Tramp Male");
+	SetModel("a_m_o_tramp_01", "Tramp Old Male");
+	SetModel("a_m_m_tranvest_01", "Transvestite Male");
+	SetModel("a_m_m_tranvest_02", "Transvestite Male 2");
+	SetModel("a_m_y_beachvesp_01", "Vespucci Beach Male");
+	SetModel("a_m_y_beachvesp_02", "Vespucci Beach Male 2");
+	SetModel("a_m_y_vindouche_01", "Vinewood Douche");
+	SetModel("a_m_y_vinewood_01", "Vinewood Male");
+	SetModel("a_m_y_vinewood_02", "Vinewood Male 2");
+	SetModel("a_m_y_vinewood_03", "Vinewood Male 3");
+	SetModel("a_m_y_vinewood_04", "Vinewood Male 4");
+	SetModel("a_m_y_stwhi_01", "White Street Male");
+	SetModel("a_m_y_stwhi_02", "White Street Male 2");
+	SetModel("a_m_y_yoga_01", "Yoga Male");
+	SetModel("a_m_y_clubcust_01", "Club Customer Male 1");
+	SetModel("a_m_y_clubcust_02", "Club Customer Male 2");
+	SetModel("a_m_y_clubcust_03", "Club Customer Male 3");
+}
+void Cutscene()
+{
+
+	SetModel("csb_abigail", "Abigail Mathers");
+	SetModel("csb_agent", "Agent");
+	SetModel("csb_agatha", "Agatha Baker");
+	SetModel("csb_avery", "Avery Duggan");
+	SetModel("csb_mp_agent14", "Agent 14");
+	SetModel("cs_amandatownley", "Amanda De Santa");
+	SetModel("cs_andreas", "Andreas Sanchez");
+	SetModel("csb_anita", "Anita Mendoza");
+	SetModel("csb_anton", "Anton Beaudelaire");
+	SetModel("cs_ashley", "Ashley Butler");
+	SetModel("csb_avon", "Avon Hertz");
+	SetModel("csb_ballasog", "Ballas OG");
+	SetModel("cs_bankman", "Bank Manager");
+	SetModel("cs_barry", "Barry");
+	SetModel("cs_beverly", "Beverly Felton");
+	SetModel("csb_brucie2", "Brucie Kibbutz");
+	SetModel("cs_orleans", "Bigfoot");
+	SetModel("csb_bogdan", "Bogdan");
+	SetModel("cs_brad", "Brad");
+	SetModel("cs_bradcadaver", "Brad's Cadaver");
+	SetModel("csb_bride", "Bride");
+	SetModel("csb_burgerdrug", "Burger Drug Worker");
+	SetModel("csb_car3guy1", "Car 3 Guy 1");
+	SetModel("csb_car3guy2", "Car 3 Guy 2");
+	SetModel("cs_carbuyer", "Car Buyer");
+	SetModel("cs_casey", "Casey");
+	SetModel("csb_chef", "Chef");
+	SetModel("csb_chef2", "Chef");
+	SetModel("csb_chin_goon", "Chinese Goon");
+	SetModel("cs_clay", "Clay Simons (The Lost)");
+	SetModel("csb_cletus", "Cletus");
+	SetModel("csb_cop", "Cop");
+	SetModel("cs_chrisformage", "Cris Formage");
+	SetModel("csb_customer", "Customer");
+	SetModel("cs_dale", "Dale");
+	SetModel("cs_davenorton", "Dave Norton");
+	SetModel("cs_debra", "Debra");
+	SetModel("cs_denise", "Denise");
+	SetModel("csb_denise_friend", "Denise's Friend");
+	SetModel("cs_devin", "Devin");
+	SetModel("csb_popov", "Dima Popov");
+	SetModel("cs_dom", "Dom Beasley");
+	SetModel("cs_drfriedlander", "Dr. Friedlander");
+	SetModel("cs_tomepsilon", "Epsilon Tom");
+	SetModel("cs_fabien", "Fabien");
+	SetModel("csb_ramp_gang", "Families Gang Member?");
+	SetModel("cs_mrk", "Ferdinand Kerimov (Mr. K)");
+	SetModel("cs_fbisuit_01", "FIB Suit");
+	SetModel("cs_floyd", "Floyd Hebert");
+	SetModel("csb_fos_rep", "FOS Rep?");
+	SetModel("csb_g", "Gerald");
+	SetModel("csb_groom", "Groom");
+	SetModel("csb_grove_str_dlr", "Grove Street Dealer");
+	SetModel("cs_guadalope", "Guadalope");
+	SetModel("cs_gurk", "GURK?");
+	SetModel("csb_hao", "Hao");
+	SetModel("csb_ramp_hic", "Hick");
+	SetModel("csb_ramp_hipster", "Hipster");
+	SetModel("csb_hugh", "Hugh Welsh");
+	SetModel("cs_hunter", "Hunter");
+	SetModel("csb_imran", "Imran Shinowa");
+	SetModel("csb_jackhowitzer", "Jack Howitzer");
+	SetModel("cs_janet", "Janet");
+	SetModel("csb_janitor", "Janitor");
+	SetModel("cs_jewelass", "Jeweller Assistant");
+	SetModel("cs_jimmyboston", "Jimmy Boston");
+	SetModel("cs_jimmydisanto", "Jimmy De Santa");
+	SetModel("cs_johnnyklebitz", "Johnny Klebitz");
+	SetModel("cs_josef", "Josef");
+	SetModel("cs_josh", "Josh");
+	SetModel("cs_karen_daniels", "Karen Daniels");
+	SetModel("cs_lamardavis", "Lamar Davis");
+	SetModel("cs_lazlow", "Lazlow");
+	SetModel("cs_lestercrest", "Lester Crest");
+	SetModel("cs_lifeinvad_01", "Life Invader");
+	SetModel("cs_magenta", "Magenta");
+	SetModel("cs_manuel", "Manuel");
+	SetModel("csb_ramp_marine", "Marine");
+	SetModel("cs_marnie", "Marnie Allen");
+	SetModel("cs_martinmadrazo", "Martin Madrazo");
+	SetModel("cs_maryann", "Mary-Ann Quinn");
+	SetModel("csb_maude", "Maude");
+	SetModel("csb_rashcosvki", "Maxim Rashkovsky");
+	SetModel("csb_mweather", "Merryweather Merc");
+	SetModel("csb_ramp_mex", "Mexican");
+	SetModel("cs_michelle", "Michelle");
+	SetModel("cs_milton", "Milton McIlroy");
+	SetModel("cs_joeminuteman", "Minuteman Joe");
+	SetModel("cs_molly", "Molly");
+	SetModel("csb_money", "Money Man");
+	SetModel("cs_movpremf_01", "Movie Premiere Female");
+	SetModel("cs_movpremmale", "Movie Premiere Male");
+	SetModel("cs_mrsphillips", "Mrs. Phillips");
+	SetModel("csb_mrs_r", "Mrs. Rackman");
+	SetModel("cs_mrs_thornhill", "Mrs. Thornhill");
+	SetModel("cs_natalia", "Natalia");
+	SetModel("cs_nervousron", "Nervous Ron");
+	SetModel("cs_nigel", "Nigel");
+	SetModel("cs_old_man1a", "Old Man 1");
+	SetModel("cs_old_man2", "Old Man 2");
+	SetModel("cs_omega", "Omega");
+	SetModel("csb_ortega", "Ortega");
+	SetModel("csb_oscar", "Oscar");
+	SetModel("csb_paige", "Paige Harris");
+	SetModel("cs_patricia", "Patricia");
+	SetModel("cs_dreyfuss", "Peter Dreyfuss");
+	SetModel("csb_porndudes", "Porn Dude");
+	SetModel("cs_priest", "Priest");
+	SetModel("csb_prologuedriver", "Prologue Driver");
+	SetModel("csb_prolsec", "Prologue Security");
+	SetModel("cs_prolsec_02", "Prologue Security 2");
+	SetModel("csb_reporter", "Reporter");
+	SetModel("csb_roccopelosi", "Rocco Pelosi");
+	SetModel("cs_russiandrunk", "Russian Drunk");
+	SetModel("csb_screen_writer", "Screenwriter");
+	SetModel("cs_siemonyetarian", "Simeon Yetarian");
+	SetModel("cs_solomon", "Solomon Richards");
+	SetModel("cs_stevehains", "Steve Haines");
+	SetModel("cs_stretch", "Stretch");
+	SetModel("csb_stripper_01", "Stripper");
+	SetModel("csb_stripper_02", "Stripper 2");
+	SetModel("cs_tanisha", "Tanisha");
+	SetModel("cs_taocheng", "Tao Cheng");
+	SetModel("cs_taocheng2", "Tao Cheng (Casino)");
+	SetModel("cs_taostranslator", "Tao's Translator");
+	SetModel("cs_taostranslator2", "Tao's Translator (Casino)");
+	SetModel("cs_tenniscoach", "Tennis Coach");
+	SetModel("cs_terry", "Terry");
+	SetModel("cs_tom", "Tom");
+	SetModel("csb_tomcasino", "Tom Connors");
+	SetModel("csb_tonya", "Tonya");
+	SetModel("csb_thornton", "Thornton Duggan");
+	SetModel("cs_tracydisanto", "Tracey De Santa");
+	SetModel("csb_trafficwarden", "Traffic Warden");
+	SetModel("csb_undercover", "Undercover Cop");
+	SetModel("cs_paper", "United Paper Man");
+	SetModel("csb_vagspeak", "Vagos Speak");
+	SetModel("csb_vincent", "Vincent (Casino)");
+	SetModel("cs_wade", "Wade");
+	SetModel("cs_chengsr", "Wei Cheng");
+	SetModel("cs_zimbor", "Zimbor");
+	SetModel("csb_djblamadon", "DJ Black Madonna");
+	SetModel("csb_dix", "Dixon");
+	SetModel("csb_englishdave", "English Dave");
+	SetModel("cs_lazlow_2", "Lazlow 2");
+	SetModel("csb_sol", "Soloman");
+	SetModel("csb_talcc", "Tale of Us 1");
+	SetModel("csb_talmm", "Tale of Us 2");
+	SetModel("csb_tonyprince", "Tony Prince");
+	SetModel("csb_alan", "Alan Jerome");
+	SetModel("csb_bryony", "Bryony");
+}
+void GangFemale()
+{
+
+	SetModel("g_f_y_ballas_01", "Ballas Female");
+	SetModel("g_f_y_families_01", "Families Female");
+	SetModel("g_f_importexport_01", "Import Export Female");
+	SetModel("g_f_y_lost_01", "The Lost MC Female");
+	SetModel("g_f_y_vagos_01", "Vagos Female");
+}
+void GangMale()
+{
+
+	SetModel("g_f_importexport_01", "Gang Female (Import-Export)");
+	SetModel("g_m_importexport_01", "Gang Male (Import-Export)");
+	SetModel("g_m_m_armboss_01", "Armenian Boss");
+	SetModel("g_m_m_armgoon_01", "Armenian Goon");
+	SetModel("g_m_y_armgoon_02", "Armenian Goon 2");
+	SetModel("g_m_m_armlieut_01", "Armenian Lieutenant");
+	SetModel("g_m_y_azteca_01", "Azteca");
+	SetModel("g_m_y_ballaeast_01", "Ballas East Male");
+	SetModel("g_m_y_ballaorig_01", "Ballas Original Male");
+	SetModel("g_m_y_ballasout_01", "Ballas South Male");
+	SetModel("g_m_m_casrn_01", "Casino Guests?");
+	SetModel("g_m_m_chemwork_01", "Chemical Plant Worker");
+	SetModel("g_m_m_chiboss_01", "Chinese Boss");
+	SetModel("g_m_m_chigoon_01", "Chinese Goon");
+	SetModel("g_m_m_chigoon_02", "Chinese Goon 2");
+	SetModel("g_m_m_chicold_01", "Chinese Goon Older");
+	SetModel("g_m_y_famca_01", "Families CA Male");
+	SetModel("g_m_y_famdnf_01", "Families DNF Male");
+	SetModel("g_m_y_famfor_01", "Families FOR Male");
+	SetModel("g_m_m_korboss_01", "Korean Boss");
+	SetModel("g_m_y_korlieut_01", "Korean Lieutenant");
+	SetModel("g_m_y_korean_01", "Korean Young Male");
+	SetModel("g_m_y_korean_02", "Korean Young Male 2");
+	SetModel("g_m_m_mexboss_01", "Mexican Boss");
+	SetModel("g_m_m_mexboss_02", "Mexican Boss 2");
+	SetModel("g_m_y_mexgang_01", "Mexican Gang Member");
+	SetModel("g_m_y_mexgoon_01", "Mexican Goon");
+	SetModel("g_m_y_mexgoon_02", "Mexican Goon 2");
+	SetModel("g_m_y_mexgoon_03", "Mexican Goon 3");
+	SetModel("g_m_y_pologoon_01", "Polynesian Goon");
+	SetModel("g_m_y_pologoon_02", "Polynesian Goon 2");
+	SetModel("g_m_y_salvaboss_01", "Salvadoran Boss");
+	SetModel("g_m_y_salvagoon_01", "Salvadoran Goon");
+	SetModel("g_m_y_salvagoon_02", "Salvadoran Goon 2");
+	SetModel("g_m_y_salvagoon_03", "Salvadoran Goon 3");
+	SetModel("g_m_y_strpunk_01", "Street Punk");
+	SetModel("g_m_y_strpunk_02", "Street Punk 2");
+	SetModel("g_m_y_lost_01", "The Lost MC Male");
+	SetModel("g_m_y_lost_02", "The Lost MC Male 2");
+	SetModel("g_m_y_lost_03", "The Lost MC Male 3");
+}
+void Story()
+{
+
+	SetModel("player_zero", "Michael");
+	SetModel("player_one", "Franklin");
+	SetModel("player_two", "Trevor");
+	SetModel("ig_abigail", "Abigail Mathers");
+	SetModel("ig_agent", "Agent");
+	SetModel("ig_agatha", "Agatha Baker");
+	SetModel("ig_avery", "Avery Duggan");
+	SetModel("ig_mp_agent14", "Agent 14");
+	SetModel("ig_amandatownley", "Amanda De Santa");
+	SetModel("ig_andreas", "Andreas Sanchez");
+	SetModel("ig_ashley", "Ashley Butler");
+	SetModel("ig_avon", "Avon Hertz");
+	SetModel("ig_ballasog", "Ballas OG");
+	SetModel("ig_benny", "Benny");
+	SetModel("ig_bankman", "Bank Manager");
+	SetModel("ig_barry", "Barry");
+	SetModel("ig_bestmen", "Best Man");
+	SetModel("ig_beverly", "Beverly Felton");
+	SetModel("ig_brucie2", "Brucie Kibbutz");
+	SetModel("ig_orleans", "Bigfoot");
+	SetModel("ig_brad", "Brad");
+	SetModel("ig_bride", "Bride");
+	SetModel("ig_car3guy1", "Car 3 Guy 1");
+	SetModel("ig_car3guy2", "Car 3 Guy 2");
+	SetModel("ig_casey", "Casey");
+	SetModel("ig_chef", "Chef");
+	SetModel("ig_chef2", "Chef");
+	SetModel("ig_claypain", "Clay Jackson (The Pain Giver)");
+	SetModel("ig_clay", "Clay Simons (The Lost)");
+	SetModel("ig_cletus", "Cletus");
+	SetModel("ig_chrisformage", "Cris Formage");
+	SetModel("ig_dale", "Dale");
+	SetModel("ig_davenorton", "Dave Norton");
+	SetModel("ig_denise", "Denise");
+	SetModel("ig_devin", "Devin");
+	SetModel("ig_popov", "Dima Popov");
+	SetModel("ig_dom", "Dom Beasley");
+	SetModel("ig_drfriedlander", "Dr. Friedlander");
+	SetModel("ig_tomepsilon", "Epsilon Tom");
+	SetModel("ig_fabien", "Fabien");
+	SetModel("ig_ramp_gang", "Families Gang Member?");
+	SetModel("ig_mrk", "Ferdinand Kerimov (Mr. K)");
+	SetModel("ig_fbisuit_01", "FIB Suit");
+	SetModel("ig_floyd", "Floyd Hebert");
+	SetModel("ig_g", "Gerald");
+	SetModel("ig_groom", "Groom");
+	SetModel("ig_hao", "Hao");
+	SetModel("ig_ramp_hic", "Hick");
+	SetModel("ig_ramp_hipster", "Hipster");
+	SetModel("ig_hunter", "Hunter");
+	SetModel("ig_janet", "Janet");
+	SetModel("ig_jay_norris", "Jay Norris");
+	SetModel("ig_jewelass", "Jeweller Assistant");
+	SetModel("ig_jimmyboston", "Jimmy Boston");
+	SetModel("ig_jimmydisanto", "Jimmy De Santa");
+	SetModel("ig_johnnyklebitz", "Johnny Klebitz");
+	SetModel("ig_josef", "Josef");
+	SetModel("ig_josh", "Josh");
+	SetModel("ig_karen_daniels", "Karen Daniels");
+	SetModel("ig_kerrymcintosh", "Kerry McIntosh");
+	SetModel("ig_lamardavis", "Lamar Davis");
+	SetModel("ig_lazlow", "Lazlow");
+	SetModel("ig_lestercrest", "Lester Crest");
+	SetModel("ig_lestercrest_2", "Lester Crest (Doomsday Heist)");
+	SetModel("ig_lifeinvad_01", "Life Invader");
+	SetModel("ig_lifeinvad_02", "Life Invader 2");
+	SetModel("ig_magenta", "Magenta");
+	SetModel("ig_manuel", "Manuel");
+	SetModel("ig_marnie", "Marnie Allen");
+	SetModel("ig_maryann", "Mary-Ann Quinn");
+	SetModel("ig_maude", "Maude");
+	SetModel("ig_rashcosvki", "Maxim Rashkovsky");
+	SetModel("ig_ramp_mex", "Mexican");
+	SetModel("ig_michelle", "Michelle");
+	SetModel("ig_milton", "Milton McIlroy");
+	SetModel("ig_joeminuteman", "Minuteman Joe");
+	SetModel("ig_malc", "Malc");
+	SetModel("ig_molly", "Molly");
+	SetModel("ig_money", "Money Man");
+	SetModel("ig_mrsphillips", "Mrs. Phillips");
+	SetModel("ig_mrs_thornhill", "Mrs. Thornhill");
+	SetModel("ig_natalia", "Natalia");
+	SetModel("ig_nervousron", "Nervous Ron");
+	SetModel("ig_nigel", "Nigel");
+	SetModel("ig_old_man1a", "Old Man 1");
+	SetModel("ig_old_man2", "Old Man 2");
+	SetModel("ig_omega", "Omega");
+	SetModel("ig_oneil", "O'Neil Brothers");
+	SetModel("ig_ortega", "Ortega");
+	SetModel("ig_paige", "Paige Harris");
+	SetModel("ig_patricia", "Patricia");
+	SetModel("ig_dreyfuss", "Peter Dreyfuss");
+	SetModel("ig_priest", "Priest");
+	SetModel("ig_prolsec_02", "Prologue Security 2");
+	SetModel("ig_roccopelosi", "Rocco Pelosi");
+	SetModel("ig_russiandrunk", "Russian Drunk");
+	SetModel("ig_screen_writer", "Screenwriter");
+	SetModel("ig_siemonyetarian", "Simeon Yetarian");
+	SetModel("ig_solomon", "Solomon Richards");
+	SetModel("ig_stevehains", "Steve Haines");
+	SetModel("ig_stretch", "Stretch");
+	SetModel("ig_talina", "Talina");
+	SetModel("ig_tanisha", "Tanisha");
+	SetModel("ig_taocheng", "Tao Cheng");
+	SetModel("ig_taocheng2", "Tao Cheng (Casino)");
+	SetModel("ig_taostranslator", "Tao's Translator");
+	SetModel("ig_taostranslator2", "Tao's Translator (Casino)");
+	SetModel("ig_tenniscoach", "Tennis Coach");
+	SetModel("ig_terry", "Terry");
+	SetModel("ig_tonya", "Tonya");
+	SetModel("ig_tracydisanto", "Tracey De Santa");
+	SetModel("ig_trafficwarden", "Traffic Warden");
+	SetModel("ig_tylerdix", "Tyler Dixon");
+	SetModel("ig_paper", "United Paper Man");
+	SetModel("ig_vagspeak", "Vagos Funeral Speaker");
+	SetModel("ig_wade", "Wade");
+	SetModel("ig_chengsr", "Wei Cheng");
+	SetModel("ig_zimbor", "Zimbor");
+	SetModel("ig_djblamadon", "DJ Black Madonna");
+	SetModel("ig_djblamryans", "DJ Ryan S");
+	SetModel("ig_djblamrupert", "DJ Rupert");
+	SetModel("ig_djdixmanager", "DJ Dixon Manager");
+	SetModel("ig_djsolfotios", "DJ Fotios");
+	SetModel("ig_djsoljakob", "DJ Jakob");
+	SetModel("ig_djsolmike", "DJ Mike T");
+	SetModel("ig_djsolrobt", "DJ Rob T");
+	SetModel("ig_djtalaurelia", " DJ Aurelia");
+	SetModel("ig_djtalignazio", "DJ Ignazio");
+	SetModel("ig_dix", "Dixon");
+	SetModel("ig_englishdave", "English Dave");
+	SetModel("ig_djgeneric_01", "Generic DJ");
+	SetModel("ig_jimmyboston_02", "Jimmy Boston 2");
+	SetModel("ig_kerrymcintosh_02", "Kerry McIntosh 2");
+	SetModel("ig_lacey_jones_02", "Lacy Jones 2");
+	SetModel("ig_lazlow_2", "Lazlow 2");
+	SetModel("ig_sol", "Soloman");
+	SetModel("ig_djsolmanager", "Soloman Manager");
+	SetModel("ig_talcc", "Tale of Us 1");
+	SetModel("ig_talmm", "Tale of Us 2");
+	SetModel("ig_tylerdix_02", "Tyler Dixon 2");
+	SetModel("ig_tonyprince", "Tony Prince");
+	SetModel("ig_sacha", "Sacha Yetarian");
+	SetModel("ig_thornton", "Thornton Duggan");
+	SetModel("ig_tomcasino", "Tom Connors");
+	SetModel("ig_vincent", "Vincent (Casino)");
+}
+void Multiplayer()
+{
+
+	SetModel("mp_s_m_armoured_01", "Armoured Van Security Male");
+	SetModel("mp_m_avongoon", "Avon Goon");
+	SetModel("mp_f_cocaine_01", "Biker Cocaine Female");
+	SetModel("mp_m_cocaine_01", "Biker Cocaine Male");
+	SetModel("mp_f_counterfeit_01", "Biker Counterfeit Female");
+	SetModel("mp_m_counterfeit_01", "Biker Counterfeit Male");
+	SetModel("mp_f_forgery_01", "Biker Forgery Female");
+	SetModel("mp_m_forgery_01", "Biker Forgery Male");
+	SetModel("mp_f_meth_01", "Biker Meth Female");
+	SetModel("mp_m_meth_01", "Biker Meth Male");
+	SetModel("mp_f_weed_01", "Biker Weed Female");
+	SetModel("mp_m_weed_01", "Biker Weed Male");
+	SetModel("mp_f_boatstaff_01", "Boat-Staff Female");
+	SetModel("mp_m_boatstaff_01", "Boat-Staff Male");
+	SetModel("mp_m_bogdangoon", "Bogdan Goon");
+	SetModel("mp_f_chbar_01", "Clubhouse Bar Female");
+	SetModel("mp_m_claude_01", "Claude Speed");
+	SetModel("mp_f_deadhooker", "Dead Hooker");
+	SetModel("mp_m_exarmy_01", "Ex-Army Male");
+	SetModel("mp_f_execpa_01", "Executive PA Female");
+	SetModel("mp_f_execpa_02", "Executive PA Female 2");
+	SetModel("mp_m_execpa_01", "Executive PA Male");
+	SetModel("mp_m_famdd_01", "Families DD Male");
+	SetModel("mp_m_fibsec_01", "FIB Security");
+	SetModel("mp_f_freemode_01", "Freemode Female");
+	SetModel("mp_m_freemode_01", "Freemode Male");
+	SetModel("mp_f_helistaff_01", "Heli-Staff Female");
+	SetModel("mp_m_marston_01", "John Marston");
+	SetModel("mp_f_misty_01", "Misty");
+	SetModel("mp_m_niko_01", "Niko Bellic");
+	SetModel("mp_f_cardesign_01", "Office Garage Mechanic (Female)");
+	SetModel("mp_g_m_pros_01", "Pros");
+	SetModel("mp_m_securoguard_01", "Securoserve Guard (Male)");
+	SetModel("mp_m_shopkeep_01", "Shopkeeper (Male)");
+	SetModel("mp_f_stripperlite", "Stripper Lite (Female)");
+	SetModel("mp_m_g_vagfun_01", "Vagos Funeral");
+	SetModel("mp_m_waremech_01", "Warehouse Mechanic (Male)");
+	SetModel("mp_m_weapexp_01", "Weapon Exp (Male)");
+	SetModel("mp_m_weapwork_01", "Weapon Work (Male)");
+	SetModel("mp_f_bennymech_01", "Benny Mechanic (Female)");
+}
+void ScenarioFemale()
+{
+
+	SetModel("s_f_y_airhostess_01", "Air Hostess");
+	SetModel("s_f_m_fembarber", "Barber Female");
+	SetModel("s_f_y_bartender_01", "Bartender");
+	SetModel("s_f_y_baywatch_01", "Baywatch Female");
+	SetModel("s_f_y_casino_01", "Casino Staff");
+	SetModel("s_f_y_cop_01", "Cop Female");
+	SetModel("s_f_y_factory_01", "Factory Worker Female");
+	SetModel("s_f_y_hooker_01", "Hooker");
+	SetModel("s_f_y_hooker_02", "Hooker 2");
+	SetModel("s_f_y_hooker_03", "Hooker 3");
+	SetModel("s_f_y_scrubs_01", "Hospital Scrubs Female");
+	SetModel("s_f_m_maid_01", "Maid");
+	SetModel("s_f_y_migrant_01", "Migrant Female");
+	SetModel("s_f_y_movprem_01", "Movie Premiere Female");
+	SetModel("s_f_y_ranger_01", "Ranger Female");
+	SetModel("s_f_m_shop_high", "Sales Assistant (High-End)");
+	SetModel("s_f_y_shop_low", "Sales Assistant (Low-End)");
+	SetModel("s_f_y_shop_mid", "Sales Assistant (Mid-Price)");
+	SetModel("s_f_y_sheriff_01", "Sheriff Female");
+	SetModel("s_f_y_stripper_01", "Stripper");
+	SetModel("s_f_y_stripper_02", "Stripper 2");
+	SetModel("s_f_y_stripperlite", "Stripper Lite");
+	SetModel("s_f_m_sweatshop_01", "Sweatshop Worker");
+	SetModel("s_f_y_sweatshop_01", "Sweatshop Worker Young");
+	SetModel("s_f_y_clubbar_01", "Club Bartender Female");
+}
+void ScenarioMale()
+{
+
+	SetModel("s_m_y_airworker", "Air Worker Male");
+	SetModel("s_m_m_movalien_01", "Alien");
+	SetModel("s_m_y_ammucity_01", "Ammu-Nation City Clerk");
+	SetModel("s_m_m_ammucountry", "Ammu-Nation Rural Clerk");
+	SetModel("s_m_m_armoured_01", "Armoured Van Security");
+	SetModel("s_m_m_armoured_02", "Armoured Van Security 2");
+	SetModel("s_m_y_armymech_01", "Army Mechanic");
+	SetModel("s_m_y_autopsy_01", "Autopsy Tech");
+	SetModel("s_m_m_autoshop_01", "Autoshop Worker");
+	SetModel("s_m_m_autoshop_02", "Autoshop Worker 2");
+	SetModel("s_m_y_barman_01", "Barman");
+	SetModel("s_m_m_cntrybar_01", "Bartender (Rural)");
+	SetModel("s_m_y_baywatch_01", "Baywatch Male");
+	SetModel("s_m_y_blackops_01", "Black Ops Soldier");
+	SetModel("s_m_y_blackops_02", "Black Ops Soldier 2");
+	SetModel("s_m_y_blackops_03", "Black Ops Soldier 3");
+	SetModel("s_m_m_bouncer_01", "Bouncer");
+	SetModel("s_m_y_busboy_01", "Busboy");
+	SetModel("s_m_o_busker_01", "Busker");
+	SetModel("s_m_y_casino_01", "Casino Staff");
+	SetModel("s_m_y_chef_01", "Chef");
+	SetModel("s_m_m_chemsec_01", "Chemical Plant Security");
+	SetModel("s_m_y_clown_01", "Clown");
+	SetModel("s_m_y_construct_01", "construction Worker");
+	SetModel("s_m_y_construct_02", "construction Worker 2");
+	SetModel("s_m_y_cop_01", "Cop Male");
+	SetModel("s_m_m_ccrew_01", "Crew Member");
+	SetModel("s_m_y_dealer_01", "Dealer");
+	SetModel("s_m_y_devinsec_01", "Devin's Security");
+	SetModel("s_m_m_dockwork_01", "Dock Worker");
+	SetModel("s_m_y_dockwork_01", "Dock Worker");
+	SetModel("s_m_m_doctor_01", "Doctor");
+	SetModel("s_m_y_doorman_01", "Doorman");
+	SetModel("s_m_y_dwservice_01", "DW Airport Worker");
+	SetModel("s_m_y_dwservice_02", "DW Airport Worker 2");
+	SetModel("s_m_y_factory_01", "Factory Worker Male");
+	SetModel("s_m_m_fiboffice_01", "FIB Office Worker");
+	SetModel("s_m_m_fiboffice_02", "FIB Office Worker 2");
+	SetModel("s_m_m_fibsec_01", "FIB Security");
+	SetModel("s_m_y_fireman_01", "Fireman Male");
+	SetModel("s_m_m_gaffer_01", "Gaffer");
+	SetModel("s_m_y_garbage", "Garbage Worker");
+	SetModel("s_m_m_gardener_01", "Gardener");
+	SetModel("s_m_y_grip_01", "Grip");
+	SetModel("s_m_m_hairdress_01", "Hairdresser Male");
+	SetModel("s_m_m_highsec_01", "High Security");
+	SetModel("s_m_m_highsec_02", "High Security 2");
+	SetModel("s_m_y_hwaycop_01", "Highway Cop");
+	SetModel("s_m_m_ciasec_01", "IAA Security");
+	SetModel("s_m_m_janitor", "Janitor");
+	SetModel("s_m_m_lathandy_01", "Latino Handyman Male");
+	SetModel("s_m_m_lifeinvad_01", "Life Invader Male");
+	SetModel("s_m_m_linecook", "Line Cook");
+	SetModel("s_m_m_lsmetro_01", "LS Metro Worker Male");
+	SetModel("s_m_m_mariachi_01", "Mariachi");
+	SetModel("s_m_m_marine_01", "Marine");
+	SetModel("s_m_m_marine_02", "Marine 2");
+	SetModel("s_m_y_marine_01", "Marine Young");
+	SetModel("s_m_y_marine_02", "Marine Young 2");
+	SetModel("s_m_y_marine_03", "Marine Young 3");
+	SetModel("s_m_y_xmech_01", "Mechanic");
+	SetModel("s_m_y_xmech_02", "MC Clubhouse Mechanic");
+	SetModel("s_m_m_migrant_01", "Migrant Male");
+	SetModel("s_m_y_mime", "Mime Artist");
+	SetModel("s_m_m_movspace_01", "Movie Astronaut");
+	SetModel("s_m_m_movprem_01", "Movie Premiere Male");
+	SetModel("s_m_m_paramedic_01", "Paramedic");
+	SetModel("s_m_y_pestcont_01", "Pest Control");
+	SetModel("s_m_m_pilot_01", "Pilot");
+	SetModel("s_m_y_pilot_01", "Pilot");
+	SetModel("s_m_m_pilot_02", "Pilot 2");
+	SetModel("s_m_m_postal_01", "Postal Worker Male");
+	SetModel("s_m_m_postal_02", "Postal Worker Male 2");
+	SetModel("s_m_m_prisguard_01", "Prison Guard");
+	SetModel("s_m_y_prisoner_01", "Prisoner");
+	SetModel("s_m_y_prismuscl_01", "Prisoner (Muscular)");
+	SetModel("s_m_y_ranger_01", "Ranger Male");
+	SetModel("s_m_y_robber_01", "Robber");
+	SetModel("s_m_y_shop_mask", "Mask Salesman");
+	SetModel("s_m_m_scientist_01", "Scientist");
+	SetModel("s_m_m_security_01", "Security Guard");
+	SetModel("s_m_y_sheriff_01", "Sheriff Male");
+	SetModel("s_m_m_snowcop_01", "Snow Cop Male");
+	SetModel("s_m_m_strperf_01", "Street Performer");
+	SetModel("s_m_m_strpreach_01", "Street Preacher");
+	SetModel("s_m_m_strvend_01", "Street Vendor");
+	SetModel("s_m_y_strvend_01", "Street Vendor Young");
+	SetModel("s_m_y_swat_01", "SWAT");
+	SetModel("s_m_m_gentransport", "Transport Worker Male");
+	SetModel("s_m_m_trucker_01", "Trucker Male");
+	SetModel("s_m_m_ups_01", "UPS Driver");
+	SetModel("s_m_m_ups_02", "UPS Driver 2");
+	SetModel("s_m_y_uscg_01", "US Coastguard");
+	SetModel("s_m_y_valet_01", "Valet");
+	SetModel("s_m_y_waiter_01", "Waiter");
+	SetModel("s_m_y_westsec_01", "Duggan Secruity");
+	SetModel("s_m_y_winclean_01", "Window Cleaner");
+	SetModel("s_m_y_clubbar_01", "Club Bartender Male");
+	SetModel("s_m_y_waretech_01", "Warehouse Technician");
+}
+void StoryScenarioFemale()
+{
+
+	SetModel("u_f_y_bikerchic", "Biker Chic Female");
+	SetModel("u_f_m_corpse_01", "Corpse Female");
+	SetModel("u_f_m_casinocash_01", "Casino Cashier");
+	SetModel("u_f_m_casinoshop_01", "Casino shop owner");
+	SetModel("u_f_m_debbie_01", "Debbie (Agatha´s Secretary)");
+	SetModel("u_f_o_carol", "Carol");
+	SetModel("u_f_o_eileen", "Eileen");
+	SetModel("u_f_y_beth", "Beth");
+	SetModel("u_f_y_lauren", "Lauren");
+	SetModel("u_f_y_taylor", "Taylor");
+	SetModel("u_f_y_corpse_01", "Corpse Young Female");
+	SetModel("u_f_y_corpse_02", "Corpse Young Female 2");
+	SetModel("u_f_y_hotposh_01", "Hot Posh Female");
+	SetModel("u_f_y_comjane", "Jane");
+	SetModel("u_f_y_jewelass_01", "Jeweller Assistant");
+	SetModel("u_f_m_miranda", "Miranda");
+	SetModel("u_f_y_mistress", "Mistress");
+	SetModel("u_f_o_moviestar", "Movie Star Female");
+	SetModel("u_f_y_poppymich", "Poppy Mitchell");
+	SetModel("u_f_y_princess", "Princess");
+	SetModel("u_f_o_prolhost_01", "Prologue Host Old Female");
+	SetModel("u_f_m_promourn_01", "Prologue Mourner Female");
+	SetModel("u_f_y_spyactress", "Spy Actress");
+	SetModel("u_f_m_miranda_02", "Miranda 2");
+	SetModel("u_f_y_poppymich_02", "Poppy Mitchell 2");
+	SetModel("u_f_y_danceburl_01", "Female Club Dancer (Burlesque)");
+	SetModel("u_f_y_dancelthr_01", "Female Club Dancer (Leather)");
+	SetModel("u_f_y_dancerave_01", "Female Club Dancer (Rave)");
+}
+void StoryScenarioMale()
+{
+
+	SetModel("u_m_y_abner", "Abner");
+	SetModel("u_m_m_aldinapoli", "Al Di Napoli Male");
+	SetModel("u_m_y_antonb", "Anton Beaudelaire");
+	SetModel("u_m_y_juggernaut_01", "Avon Juggernaut");
+	SetModel("u_m_y_babyd", "Baby D");
+	SetModel("u_m_m_bankman", "Bank Manager Male");
+	SetModel("u_m_m_bikehire_01", "Bike Hire Guy");
+	SetModel("u_m_m_blane", "Blane");
+	SetModel("u_m_m_curtis", "Curtis");
+	SetModel("u_m_m_vince", "Vince");
+	SetModel("u_m_o_dean", "Dean");
+	SetModel("u_m_y_caleb", "Caleb");
+	SetModel("u_m_y_croupthief_01", "Casino Thief");
+	SetModel("u_m_y_gabriel", "Gabriel");
+	SetModel("u_m_y_ushi", "Ushi");
+	SetModel("u_m_y_burgerdrug_01", "Burger Drug Worker");
+	SetModel("u_m_y_chip", "Chip");
+	SetModel("u_m_y_cyclist_01", "Cyclist Male");
+	SetModel("u_m_y_corpse_01", "Dead Courier");
+	SetModel("u_m_m_doa_01", "DOA Man");
+	SetModel("u_m_m_edtoh", "Ed Toh");
+	SetModel("u_m_y_militarybum", "Ex-Mil Bum");
+	SetModel("u_m_m_fibarchitect", "FIB Architect");
+	SetModel("u_m_y_fibmugger_01", "FIB Mugger");
+	SetModel("u_m_o_finguru_01", "Financial Guru");
+	SetModel("u_m_m_glenstank_01", "Glen-Stank Male");
+	SetModel("u_m_m_griff_01", "Griff");
+	SetModel("u_m_y_guido_01", "Guido");
+	SetModel("u_m_y_gunvend_01", "Gun Vendor");
+	SetModel("u_m_y_smugmech_01", "Hangar Mechanic");
+	SetModel("u_m_y_hippie_01", "Hippie Male");
+	SetModel("u_m_m_streetart_01", "Street Art Male");
+	SetModel("u_m_y_imporage", "Impotent Rage");
+	SetModel("u_m_o_taphillbilly", "Jesco White (Tapdancing Hillbilly)");
+	SetModel("u_m_m_jesus_01", "Jesus");
+	SetModel("u_m_m_jewelthief", "Jewel Thief");
+	SetModel("u_m_m_jewelsec_01", "Jeweller Security");
+	SetModel("u_m_y_justin", "Justin");
+	SetModel("u_m_y_baygor", "Kifflom Guy");
+	SetModel("u_m_m_willyfist", "Love Fist Willy");
+	SetModel("u_m_y_mani", "Mani");
+	SetModel("u_m_m_markfost", "Mark Fostenburg");
+	SetModel("u_m_m_filmdirector", "Movie Director");
+	SetModel("u_m_o_filmnoir", "Movie Corpse (Suited)");
+	SetModel("u_m_y_paparazzi", "Paparazzi Young Male");
+	SetModel("u_m_m_partytarget", "Party Target");
+	SetModel("u_m_y_party_01", "Partygoer");
+	SetModel("u_m_y_pogo_01", "Pogo the Monkey");
+	SetModel("u_m_y_prisoner_01", "Prisoner");
+	SetModel("u_m_y_proldriver_01", "Prologue Driver");
+	SetModel("u_m_m_promourn_01", "Prologue Mourner Male");
+	SetModel("u_m_m_prolsec_01", "Prologue Security");
+	SetModel("u_m_y_rsranger_01", "Republican Space Ranger");
+	SetModel("u_m_m_rivalpap", "Rival Paparazzo");
+	SetModel("u_m_y_sbike", "Sports Biker");
+	SetModel("u_m_m_spyactor", "Spy Actor");
+	SetModel("u_m_y_staggrm_01", "Stag Party Groom");
+	SetModel("u_m_y_tattoo_01", "Tattoo Artist");
+	SetModel("u_m_o_tramp_01", "Tramp Old Male");
+	SetModel("u_m_y_zombie_01", "Zombie");
+	SetModel("u_m_y_danceburl_01", "Male Club Dancer (Burlesque)");
+	SetModel("u_m_y_dancelthr_01", "Male Club Dancer (Leather)");
+	SetModel("u_m_y_dancerave_01", "Male Club Dancer (Rave)");
+}
+void other()
+{
+
+	SetModel("hc_driver", "Jewel Heist Driver");
+	SetModel("hc_gunman", "Jewel Heist Gunman");
+	SetModel("hc_hacker", "Jewel Heist Hacker");
+}
+
+
+#include "common.hpp"
+#include "natives.hpp"
+#include "MenuFunctions.hpp"
+#include <imgui.h>
+#include <imgui_internal.h>
+#include <d3d11.h>
+#include <renderer.hpp>
+
+using namespace big;
+using namespace std;
+std::string dict;
+std::map<std::string, std::vector<std::string>> AllPedAnims;
+std::pair<const std::string, std::vector<std::string>>* selectedAnimDictPtr = nullptr;
+std::string Removedash(std::string s)
+{
+	return s.substr(0, s.find("-"));
+}
+
+void PedAnimList()
+{	
+	auto& _searchStr = dict;
+	selectedAnimDictPtr = nullptr;
+	bool notFoundInDict;
+
+
+	for (auto& current : AllPedAnims)
+	{
+		if (!current.second.empty())
+		{
+			if(SubMenuOption(StringToChar(Removedash(current.first)), PedAnimPICKED_SUB))
+				selectedAnimDictPtr = &current;
+		}
+	}
+}
+void AnimPed(std::string anim_dict, std::string anim_name, bool loop)
+{
+	
+	if (Option(Removedash(anim_name)))
+	{
+		g_fiber_pool->queue_job([=]
+		{
+				int a = -1;
+				int b = 1;
+				if (!loop)
+				{
+					a = 1;
+					b = 0;
+				}
+				STREAMING::REQUEST_ANIM_DICT(StringToChar(Removedash(anim_dict)));
+				while (!STREAMING::HAS_ANIM_DICT_LOADED(StringToChar(Removedash(anim_dict)))) script::get_current()->yield();
+				AI::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), StringToChar(Removedash(anim_dict)), StringToChar(Removedash(anim_name)), 10000.0f, -1.5f, a, b, 0.445f, false, false, false);
+		});
+		
+	}
+}
+void PickedAnimLIST()
+{
+	if (selectedAnimDictPtr == nullptr)
+	{
+		BackSubmenu();
+		return;
+	}
+
+	if (Option("Clear Task"))
+	{
+		g_fiber_pool->queue_job([]
+		{
+				AI::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
+		});
+	}
+	auto& selectedDict = *selectedAnimDictPtr;
+
+	for (auto& current : selectedDict.second)
+	{
+		AnimPed(Removedash(selectedDict.first), Removedash(current), true);
+	}
+
+	End("Ped Anim List");
+
+}
+
+
+
+#include "common.hpp"
+#include "natives.hpp"
+#include "gui.hpp"
+#include "MenuFunctions.hpp"
+#include <imgui.h>
+#include <imgui_internal.h>
+#include <d3d11.h>
+#include <renderer.hpp>
+
+using namespace big;
+using namespace std;
+
+
+
+string ArrayOfTimeCycles[] = {
+
+	"AP1_01_B_IntRefRange",
+	"AP1_01_C_NoFog",
+	"AirRaceBoost01",
+	"AirRaceBoost02",
+	"AmbientPUSH",
+	"ArenaEMP",
+	"ArenaEMP_Blend",
+	"ArenaWheelPurple01",
+	"ArenaWheelPurple02",
+	"Bank_HLWD",
+	"Barry1_Stoned",
+	"BarryFadeOut",
+	"BeastIntro01",
+	"BeastIntro02",
+	"BeastLaunch01",
+	"BeastLaunch02",
+	"BikerFilter",
+	"BikerForm01",
+	"BikerFormFlash",
+	"Bikers",
+	"BikersSPLASH",
+	"BlackOut",
+	"BleepYellow01",
+	"BleepYellow02",
+	"Bloom",
+	"BloomLight",
+	"BloomMid",
+	"BombCam01",
+	"BombCamFlash",
+	"Broken_camera_fuzz",
+	"BulletTimeDark",
+	"BulletTimeLight",
+	"CAMERA_BW",
+	"CAMERA_secuirity",
+	"CAMERA_secuirity_FUZZ",
+	"CH3_06_water",
+	"CHOP",
+	"CS1_railwayB_tunnel",
+	"CS3_rail_tunnel",
+	"CUSTOM_streetlight",
+	"Carpark_MP_exit",
+	"CopsSPLASH",
+	"CrossLine01",
+	"CrossLine02",
+	"DONT_overide_sunpos",
+	"DRUG_2_drive",
+	"DRUG_gas_huffin",
+	"DeadlineNeon01",
+	"DefaultColorCode",
+	"Dont_tazeme_bro",
+	"DrivingFocusDark",
+	"DrivingFocusLight",
+	"Drone_FishEye_Lens",
+	"Drug_deadman",
+	"Drug_deadman_blend",
+	"Drunk",
+	"EXTRA_bouncelight",
+	"EXT_FULLAmbientmult_art",
+	"ExplosionJosh",
+	"FIB_5",
+	"FIB_6",
+	"FIB_A",
+	"FIB_B",
+	"FIB_interview",
+	"FIB_interview_optimise",
+	"FORdoron_delete",
+	"FRANKLIN",
+	"Facebook_NEW",
+	"FinaleBank",
+	"FinaleBankMid",
+	"FinaleBankexit",
+	"Forest",
+	"FrankilinsHOUSEhills",
+	"FranklinColorCode",
+	"FranklinColorCodeBasic",
+	"FranklinColorCodeBright",
+	"FullAmbientmult_interior",
+	"Glasses_BlackOut",
+	"Hanger_INTmods",
+	"Hicksbar",
+	"HicksbarNEW",
+	"Hint_cam",
+	"IMpExt_Interior_02",
+	"IMpExt_Interior_02_stair_cage",
+	"INT_FULLAmbientmult_art",
+	"INT_FULLAmbientmult_both",
+	"INT_FullAmbientmult",
+	"INT_NO_fogALPHA",
+	"INT_NOdirectLight",
+	"INT_NoAmbientmult",
+	"INT_NoAmbientmult_art",
+	"INT_NoAmbientmult_both",
+	"INT_garage",
+	"INT_mall",
+	"INT_nowaterREF",
+	"INT_posh_hairdresser",
+	"INT_smshop",
+	"INT_smshop_inMOD",
+	"INT_smshop_indoor_bloom",
+	"INT_smshop_outdoor_bloom",
+	"INT_streetlighting",
+	"INT_trailer_cinema",
+	"ImpExp_Interior_01",
+	"InchOrange01",
+	"InchOrange02",
+	"InchPickup01",
+	"InchPickup02",
+	"InchPurple01",
+	"InchPurple02",
+	"KT_underpass",
+	"Kifflom",
+	"LIGHTSreduceFALLOFF",
+	"LODmult_HD_orphan_LOD_reduce",
+	"LODmult_HD_orphan_reduce",
+	"LODmult_LOD_reduce",
+	"LODmult_SLOD1_reduce",
+	"LODmult_SLOD2_reduce",
+	"LODmult_SLOD3_reduce",
+	"LODmult_global_reduce",
+	"LODmult_global_reduce_NOHD",
+	"LectroDark",
+	"LectroLight",
+	"LifeInvaderLOD",
+	"LightPollutionHills",
+	"LostTimeDark",
+	"LostTimeFlash",
+	"LostTimeLight",
+	"METRO_Tunnels",
+	"METRO_Tunnels_entrance",
+	"METRO_platform",
+	"MPApartHigh",
+	"MPApartHigh_palnning",
+	"MPApart_H_01",
+	"MPApart_H_01_gym",
+	"MP_Arena_VIP",
+	"MP_Arena_theme_atlantis",
+	"MP_Arena_theme_evening",
+	"MP_Arena_theme_hell",
+	"MP_Arena_theme_midday",
+	"MP_Arena_theme_morning",
+	"MP_Arena_theme_night",
+	"MP_Arena_theme_saccharine",
+	"MP_Arena_theme_sandstorm",
+	"MP_Arena_theme_scifi_night",
+	"MP_Arena_theme_storm",
+	"MP_Arena_theme_toxic",
+	"MP_Bull_tost",
+	"MP_Bull_tost_blend",
+	"MP_Garage_L",
+	"MP_H_01_Bathroom",
+	"MP_H_01_Bedroom",
+	"MP_H_01_New",
+	"MP_H_01_New_Bathroom",
+	"MP_H_01_New_Bedroom",
+	"MP_H_01_New_Study",
+	"MP_H_01_Study",
+	"MP_H_02",
+	"MP_H_04",
+	"MP_H_06",
+	"MP_Killstreak",
+	"MP_Killstreak_blend",
+	"MP_Loser",
+	"MP_Loser_blend",
+	"MP_MedGarage",
+	"MP_Powerplay",
+	"MP_Powerplay_blend",
+	"MP_Studio_Lo",
+	"MP_corona_heist",
+	"MP_corona_heist_BW",
+	"MP_corona_heist_BW_night",
+	"MP_corona_heist_DOF",
+	"MP_corona_heist_blend",
+	"MP_corona_heist_night",
+	"MP_corona_heist_night_blend",
+	"MP_corona_selection",
+	"MP_corona_switch",
+	"MP_corona_tournament",
+	"MP_corona_tournament_DOF",
+	"MP_death_grade",
+	"MP_death_grade_blend01",
+	"MP_death_grade_blend02",
+	"MP_deathfail_night",
+	"MP_heli_cam",
+	"MP_intro_logo",
+	"MP_job_end_night",
+	"MP_job_load",
+	"MP_job_load_01",
+	"MP_job_load_02",
+	"MP_job_lose",
+	"MP_job_preload",
+	"MP_job_preload_blend",
+	"MP_job_preload_night",
+	"MP_job_win",
+	"MP_lowgarage",
+	"MP_race_finish",
+	"MP_select",
+	"MichaelColorCode",
+	"MichaelColorCodeBasic",
+	"MichaelColorCodeBright",
+	"MichaelsDarkroom",
+	"MichaelsDirectional",
+	"MichaelsNODirectional",
+	"Mp_Stilts",
+	"Mp_Stilts2",
+	"Mp_Stilts2_bath",
+	"Mp_Stilts_gym",
+	"Mp_Stilts_gym2",
+	"Mp_apart_mid",
+	"Multipayer_spectatorCam",
+	"NEW_abattoir",
+	"NEW_jewel",
+	"NEW_jewel_EXIT",
+	"NEW_lesters",
+	"NEW_ornate_bank",
+	"NEW_ornate_bank_entrance",
+	"NEW_ornate_bank_office",
+	"NEW_ornate_bank_safe",
+	"NEW_shrinksOffice",
+	"NEW_station_unfinished",
+	"NEW_trevorstrailer",
+	"NEW_tunnels",
+	"NEW_tunnels_ditch",
+	"NEW_tunnels_hole",
+	"NEW_yellowtunnels",
+	"NG_blackout",
+	"NG_deathfail_BW_base",
+	"NG_deathfail_BW_blend01",
+	"NG_deathfail_BW_blend02",
+	"NG_filmic01",
+	"NG_filmic02",
+	"NG_filmic03",
+	"NG_filmic04",
+	"NG_filmic05",
+	"NG_filmic06",
+	"NG_filmic07",
+	"NG_filmic08",
+	"NG_filmic09",
+	"NG_filmic10",
+	"NG_filmic11",
+	"NG_filmic12",
+	"NG_filmic13",
+	"NG_filmic14",
+	"NG_filmic15",
+	"NG_filmic16",
+	"NG_filmic17",
+	"NG_filmic18",
+	"NG_filmic19",
+	"NG_filmic20",
+	"NG_filmic21",
+	"NG_filmic22",
+	"NG_filmic23",
+	"NG_filmic24",
+	"NG_filmic25",
+	"NG_filmnoir_BW01",
+	"NG_filmnoir_BW02",
+	"NG_first",
+	"NO_coronas",
+	"NO_fog_alpha",
+	"NO_streetAmbient",
+	"NO_weather",
+	"NOdirectLight",
+	"NOrain",
+	"NeutralColorCode",
+	"NeutralColorCodeBasic",
+	"NeutralColorCodeBright",
+	"NeutralColorCodeLight",
+	"NewMicheal",
+	"NewMicheal_night",
+	"NewMicheal_upstairs",
+	"NewMichealgirly",
+	"NewMichealstoilet",
+	"NewMichealupstairs",
+	"New_sewers",
+	"NoAmbientmult",
+	"NoAmbientmult_interior",
+	"NoPedLight",
+	"OrbitalCannon",
+	"PERSHING_water_reflect",
+	"PORT_heist_underwater",
+	"PPFilter",
+	"PPGreen01",
+	"PPGreen02",
+	"PPOrange01",
+	"PPOrange02",
+	"PPPink01",
+	"PPPink02",
+	"PPPurple01",
+	"PPPurple02",
+	"Paleto",
+	"PennedInDark",
+	"PennedInLight",
+	"PlayerSwitchNeutralFlash",
+	"PlayerSwitchPulse",
+	"PoliceStation",
+	"PoliceStationDark",
+	"Prologue_shootout_opt",
+	"REDMIST",
+	"REDMIST_blend",
+	"RaceTurboDark",
+	"RaceTurboFlash",
+	"RaceTurboLight",
+	"ReduceDrawDistance",
+	"ReduceDrawDistanceMAP",
+	"ReduceDrawDistanceMission",
+	"ReduceSSAO",
+	"RemixDrone",
+	"RemoteSniper",
+	"SALTONSEA",
+	"SAWMILL",
+	"SP1_03_drawDistance",
+	"STRIP_changing",
+	"STRIP_nofog",
+	"STRIP_office",
+	"STRIP_stage",
+	"SheriffStation",
+	"Shop247",
+	"Shop247_none",
+	"SmugglerCheckpoint01",
+	"SmugglerCheckpoint02",
+	"SmugglerFlash",
+	"Sniper",
+	"StadLobby",
+	"StreetLighting",
+	"StreetLightingJunction",
+	"StreetLightingtraffic",
+	"StuntFastDark",
+	"StuntFastLight",
+	"StuntSlowDark",
+	"StuntSlowLight",
+	"TREVOR",
+	"TUNNEL_green",
+	"TUNNEL_green_ext",
+	"TUNNEL_orange",
+	"TUNNEL_orange_exterior",
+	"TUNNEL_white",
+	"TUNNEL_yellow",
+	"TUNNEL_yellow_ext",
+	"TinyGreen01",
+	"TinyGreen02",
+	"TinyPink01",
+	"TinyPink02",
+	"TinyRacerMoBlur",
+	"TransformFlash",
+	"TransformRaceFlash",
+	"TrevorColorCode",
+	"TrevorColorCodeBasic",
+	"TrevorColorCodeBright",
+	"Trevors_room",
+	"Tunnel",
+	"Tunnel_green1",
+	"VAGOS_new_garage",
+	"VAGOS_new_hangout",
+	"VC_tunnel_entrance",
+	"V_Abattoir_Cold",
+	"V_CIA_Facility",
+	"V_FIB_IT3",
+	"V_FIB_IT3_alt",
+	"V_FIB_IT3_alt5",
+	"V_FIB_stairs",
+	"V_Metro2",
+	"V_Metro_station",
+	"V_Office_smoke",
+	"V_Office_smoke_Fire",
+	"V_Office_smoke_ext",
+	"V_Solomons",
+	"V_recycle_dark",
+	"V_recycle_light",
+	"V_recycle_mainroom",
+	"V_strip_nofog",
+	"V_strip_office",
+	"Vagos",
+	"VagosSPLASH",
+	"VolticBlur",
+	"VolticFlash",
+	"VolticGold",
+	"WATER _lab_cooling",
+	"WATER_CH2_06_01_03",
+	"WATER_CH2_06_02",
+	"WATER_CH2_06_04",
+	"WATER_ID2_21",
+	"WATER_REF_malibu",
+	"WATER_RichmanStuntJump",
+	"WATER_cove",
+	"WATER_hills",
+	"WATER_lab",
+	"WATER_militaryPOOP",
+	"WATER_muddy",
+	"WATER_port",
+	"WATER_refmap_high",
+	"WATER_refmap_hollywoodlake",
+	"WATER_refmap_low",
+	"WATER_refmap_med",
+	"WATER_refmap_off",
+	"WATER_refmap_poolside",
+	"WATER_refmap_silverlake",
+	"WATER_refmap_venice",
+	"WATER_refmap_verylow",
+	"WATER_resevoir",
+	"WATER_river",
+	"WATER_salton",
+	"WATER_salton_bottom",
+	"WATER_shore",
+	"WATER_silty",
+	"WATER_silverlake",
+	"WarpCheckpoint",
+	"WeaponUpgrade",
+	"WhiteOut",
+	"baseTONEMAPPING",
+	"blackNwhite",
+	"buggy_shack",
+	"buildingTOP",
+	"cBank_back",
+	"cBank_front",
+	"canyon_mission",
+	"carMOD_underpass",
+	"carpark",
+	"carpark_dt1_02",
+	"carpark_dt1_03",
+	"cashdepot",
+	"cashdepotEMERGENCY",
+	"ch2_tunnel_whitelight",
+	"cinema",
+	"cinema_001",
+	"cops",
+	"crane_cam",
+	"crane_cam_cinematic",
+	"damage",
+	"default",
+	"dont_tazeme_bro_b",
+	"downtown_FIB_cascades_opt",
+	"drug_drive_blend01",
+	"drug_drive_blend02",
+	"drug_flying_01",
+	"drug_flying_02",
+	"drug_flying_base",
+	"drug_wobbly",
+	"dying",
+	"eatra_bouncelight_beach",
+	"epsilion",
+	"exile1_exit",
+	"exile1_plane",
+	"ext_int_extlight_large",
+	"eyeINtheSKY",
+	"facebook_serveroom",
+	"fireDEPT",
+	"fp_vig_black",
+	"fp_vig_blue",
+	"fp_vig_brown",
+	"fp_vig_gray",
+	"fp_vig_green",
+	"fp_vig_red",
+	"frankilnsAUNTS_SUNdir",
+	"frankilnsAUNTS_new",
+	"gallery_refmod",
+	"garage",
+	"gen_bank",
+	"glasses_Darkblue",
+	"glasses_Scuba",
+	"glasses_VISOR",
+	"glasses_black",
+	"glasses_blue",
+	"glasses_brown",
+	"glasses_green",
+	"glasses_orange",
+	"glasses_pink",
+	"glasses_purple",
+	"glasses_red",
+	"glasses_yellow",
+	"gorge_reflection_gpu",
+	"gorge_reflectionoffset",
+	"gorge_reflectionoffset2",
+	"graveyard_shootout",
+	"grdlc_int_02",
+	"grdlc_int_02_trailer_cave",
+	"gunclub",
+	"gunclubrange",
+	"gunshop",
+	"gunstore",
+	"half_direct",
+	"hangar_lightsmod",
+	"heathaze",
+	"heist_boat",
+	"heist_boat_engineRoom",
+	"heist_boat_norain",
+	"heliGunCam",
+	"helicamfirst",
+	"hillstunnel",
+	"hitped",
+	"hud_def_Franklin",
+	"hud_def_Michael",
+	"hud_def_Trevor",
+	"hud_def_blur",
+	"hud_def_blur_switch",
+	"hud_def_colorgrade",
+	"hud_def_desat_Franklin",
+	"hud_def_desat_Michael",
+	"hud_def_desat_Neutral",
+	"hud_def_desat_Trevor",
+	"hud_def_desat_cold",
+	"hud_def_desat_cold_kill",
+	"hud_def_desat_switch",
+	"hud_def_desatcrunch",
+	"hud_def_flash",
+	"hud_def_focus",
+	"hud_def_lensdistortion",
+	"hud_def_lensdistortion_subtle",
+	"id1_11_tunnel",
+	"impexp_interior_01_lift",
+	"int_Barber1",
+	"int_ClothesHi",
+	"int_ControlTower_none",
+	"int_ControlTower_small",
+	"int_Farmhouse_none",
+	"int_Farmhouse_small",
+	"int_FranklinAunt_small",
+	"int_GasStation",
+	"int_Hospital2_DM",
+	"int_Hospital_Blue",
+	"int_Hospital_BlueB",
+	"int_Hospital_DM",
+	"int_Lost_none",
+	"int_Lost_small",
+	"int_amb_mult_large",
+	"int_arena_01",
+	"int_arena_Mod",
+	"int_arena_Mod_garage",
+	"int_arena_VIP",
+	"int_carmod_small",
+	"int_carrier_control",
+	"int_carrier_control_2",
+	"int_carrier_hanger",
+	"int_carrier_rear",
+	"int_carrier_stair",
+	"int_carshowroom",
+	"int_chopshop",
+	"int_clean_extlight_large",
+	"int_clean_extlight_none",
+	"int_clean_extlight_small",
+	"int_clotheslow_large",
+	"int_cluckinfactory_none",
+	"int_cluckinfactory_small",
+	"int_dockcontrol_small",
+	"int_extlght_sm_cntrst",
+	"int_extlight_large",
+	"int_extlight_large_fog",
+	"int_extlight_none",
+	"int_extlight_none_dark",
+	"int_extlight_none_dark_fog",
+	"int_extlight_none_fog",
+	"int_extlight_small",
+	"int_extlight_small_clipped",
+	"int_extlight_small_fog",
+	"int_hanger_none",
+	"int_hanger_small",
+	"int_hospital_dark",
+	"int_hospital_small",
+	"int_lesters",
+	"int_methlab_small",
+	"int_motelroom",
+	"int_office_Lobby",
+	"int_office_LobbyHall",
+	"int_tattoo",
+	"int_tattoo_B",
+	"int_tunnel_none_dark",
+	"interior_WATER_lighting",
+	"introblue",
+	"jewel_gas",
+	"jewel_optim",
+	"jewelry_entrance",
+	"jewelry_entrance_INT",
+	"jewelry_entrance_INT_fog",
+	"lab_none",
+	"lab_none_dark",
+	"lab_none_dark_OVR",
+	"lab_none_dark_fog",
+	"lab_none_exit",
+	"lab_none_exit_OVR",
+	"li",
+	"lightning",
+	"lightning_cloud",
+	"lightning_strong",
+	"lightning_weak",
+	"lightpolution",
+	"lodscaler",
+	"maxlodscaler",
+	"metro",
+	"micheal",
+	"micheals_lightsOFF",
+	"michealspliff",
+	"michealspliff_blend",
+	"michealspliff_blend02",
+	"militarybase_nightlight",
+	"mineshaft",
+	"morebloom",
+	"morgue_dark",
+	"morgue_dark_ovr",
+	"mp_battle_int01",
+	"mp_battle_int01_dancefloor",
+	"mp_battle_int01_dancefloor_OFF",
+	"mp_battle_int01_entry",
+	"mp_battle_int01_garage",
+	"mp_battle_int01_office",
+	"mp_battle_int02",
+	"mp_battle_int03",
+	"mp_battle_int03_tint1",
+	"mp_battle_int03_tint2",
+	"mp_battle_int03_tint3",
+	"mp_battle_int03_tint4",
+	"mp_battle_int03_tint5",
+	"mp_battle_int03_tint6",
+	"mp_battle_int03_tint7",
+	"mp_battle_int03_tint8",
+	"mp_battle_int03_tint9",
+	"mp_bkr_int01_garage",
+	"mp_bkr_int01_small_rooms",
+	"mp_bkr_int01_transition",
+	"mp_bkr_int02_garage",
+	"mp_bkr_int02_hangout",
+	"mp_bkr_int02_small_rooms",
+	"mp_bkr_ware01",
+	"mp_bkr_ware02_dry",
+	"mp_bkr_ware02_standard",
+	"mp_bkr_ware02_upgrade",
+	"mp_bkr_ware03_basic",
+	"mp_bkr_ware03_upgrade",
+	"mp_bkr_ware04",
+	"mp_bkr_ware05",
+	"mp_exec_office_01",
+	"mp_exec_office_02",
+	"mp_exec_office_03",
+	"mp_exec_office_03C",
+	"mp_exec_office_03_blue",
+	"mp_exec_office_04",
+	"mp_exec_office_05",
+	"mp_exec_office_06",
+	"mp_exec_warehouse_01",
+	"mp_gr_int01_black",
+	"mp_gr_int01_grey",
+	"mp_gr_int01_white",
+	"mp_h_05",
+	"mp_h_07",
+	"mp_h_08",
+	"mp_imx_intwaremed",
+	"mp_imx_intwaremed_office",
+	"mp_imx_mod_int_01",
+	"mp_lad_day",
+	"mp_lad_judgment",
+	"mp_lad_night",
+	"mp_nightshark_shield_fp",
+	"mp_smg_int01_han",
+	"mp_smg_int01_han_blue",
+	"mp_smg_int01_han_red",
+	"mp_smg_int01_han_yellow",
+	"mp_x17dlc_base",
+	"mp_x17dlc_base_dark",
+	"mp_x17dlc_base_darkest",
+	"mp_x17dlc_facility",
+	"mp_x17dlc_facility2",
+	"mp_x17dlc_facility_conference",
+	"mp_x17dlc_in_sub",
+	"mp_x17dlc_in_sub_no_reflection",
+	"mp_x17dlc_int_01",
+	"mp_x17dlc_int_01_tint1",
+	"mp_x17dlc_int_01_tint2",
+	"mp_x17dlc_int_01_tint3",
+	"mp_x17dlc_int_01_tint4",
+	"mp_x17dlc_int_01_tint5",
+	"mp_x17dlc_int_01_tint6",
+	"mp_x17dlc_int_01_tint7",
+	"mp_x17dlc_int_01_tint8",
+	"mp_x17dlc_int_01_tint9",
+	"mp_x17dlc_int_02",
+	"mp_x17dlc_int_02_hangar",
+	"mp_x17dlc_int_02_outdoor_intro_camera",
+	"mp_x17dlc_int_02_tint1",
+	"mp_x17dlc_int_02_tint2",
+	"mp_x17dlc_int_02_tint3",
+	"mp_x17dlc_int_02_tint4",
+	"mp_x17dlc_int_02_tint5",
+	"mp_x17dlc_int_02_tint6",
+	"mp_x17dlc_int_02_tint7",
+	"mp_x17dlc_int_02_tint8",
+	"mp_x17dlc_int_02_tint9",
+	"mp_x17dlc_int_02_vehicle_avenger_camera",
+	"mp_x17dlc_int_02_vehicle_workshop_camera",
+	"mp_x17dlc_int_02_weapon_avenger_camera",
+	"mp_x17dlc_int_silo",
+	"mp_x17dlc_int_silo_escape",
+	"mp_x17dlc_lab",
+	"mp_x17dlc_lab_loading_bay",
+	"mugShot",
+	"mugShot_lineup",
+	"multiplayer_ped_fight",
+	"nervousRON_fog",
+	"new_MP_Garage_L",
+	"new_bank",
+	"new_stripper_changing",
+	"new_tunnels_entrance",
+	"nextgen",
+	"nightvision",
+	"overwater",
+	"paleto_nightlight",
+	"paleto_opt",
+	"phone_cam",
+	"phone_cam1",
+	"phone_cam10",
+	"phone_cam11",
+	"phone_cam12",
+	"phone_cam13",
+	"phone_cam2",
+	"phone_cam3",
+	"phone_cam3_REMOVED",
+	"phone_cam4",
+	"phone_cam5",
+	"phone_cam6",
+	"phone_cam7",
+	"phone_cam8",
+	"phone_cam8_REMOVED",
+	"phone_cam9",
+	"plane_inside_mode",
+	"player_transition",
+	"player_transition_no_scanlines",
+	"player_transition_scanlines",
+	"plaza_carpark",
+	"polluted",
+	"poolsidewaterreflection2",
+	"powerplant_nightlight",
+	"powerstation",
+	"prison_nightlight",
+	"projector",
+	"prologue",
+	"prologue_ending_fog",
+	"prologue_ext_art_amb",
+	"prologue_reflection_opt",
+	"prologue_shootout",
+	"pulse",
+	"ranch",
+	"reducelightingcost",
+	"reducewaterREF",
+	"refit",
+	"reflection_correct_ambient",
+	"resvoire_reflection",
+	"rply_brightness",
+	"rply_brightness_neg",
+	"rply_contrast",
+	"rply_contrast_neg",
+	"rply_motionblur",
+	"rply_saturation",
+	"rply_saturation_neg",
+	"rply_vignette",
+	"rply_vignette_neg",
+	"sandyshore_nightlight",
+	"scanline_cam",
+	"scanline_cam_cheap",
+	"scope_zoom_in",
+	"scope_zoom_out",
+	"secret_camera",
+	"services_nightlight",
+	"shades_pink",
+	"shades_yellow",
+	"ship_explosion_underwater",
+	"ship_lighting",
+	"sleeping",
+	"spectator1",
+	"spectator10",
+	"spectator2",
+	"spectator3",
+	"spectator4",
+	"spectator5",
+	"spectator6",
+	"spectator7",
+	"spectator8",
+	"spectator9",
+	"stc_coroners",
+	"stc_deviant_bedroom",
+	"stc_deviant_lounge",
+	"stc_franklinsHouse",
+	"stc_trevors",
+	"stoned",
+	"stoned_aliens",
+	"stoned_cutscene",
+	"stoned_monkeys",
+	"subBASE_water_ref",
+	"sunglasses",
+	"superDARK",
+	"switch_cam_1",
+	"switch_cam_2",
+	"telescope",
+	"torpedo",
+	"traffic_skycam",
+	"trailer_explosion_optimise",
+	"trevorspliff",
+	"trevorspliff_blend",
+	"trevorspliff_blend02",
+	"tunnel_entrance",
+	"tunnel_entrance_INT",
+	"tunnel_id1_11",
+	"ufo",
+	"ufo_deathray",
+	"underwater",
+	"underwater_deep",
+	"underwater_deep_clear",
+	"v_abattoir",
+	"v_bahama",
+	"v_cashdepot",
+	"v_dark",
+	"v_foundry",
+	"v_janitor",
+	"v_jewel2",
+	"v_metro",
+	"v_michael",
+	"v_michael_lounge",
+	"v_recycle",
+	"v_rockclub",
+	"v_strip3",
+	"v_strpchangerm",
+	"v_sweat",
+	"v_sweat_NoDirLight",
+	"v_sweat_entrance",
+	"v_torture",
+	"vagos_extlight_small",
+	"vehicle_subint",
+	"venice_canal_tunnel",
+	"vespucci_garage",
+	"warehouse",
+	"whitenightlighting",
+	"winning_room",
+	"yacht_DLC",
+	"yell_tunnel_nodirect"
+};
+
+
+void SetMod(const std::string& value)
+{
+
+	GRAPHICS::SET_TIMECYCLE_MODIFIER(const_cast<PCHAR>(value.c_str()));
+	
+}
+void SetModStrength(float value)
+{
+	
+	GRAPHICS::SET_TIMECYCLE_MODIFIER_STRENGTH(value);
+	
+}
+void ClearMod()
+{
+
+	GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+
+}
+float TimecycleStrength = 1.0f;
+void TimecycleModifiers()
+{
+	if (Option("Clear")) ClearMod();
+	if (Float("Strength", TimecycleStrength, 0.f, 100.f, 0.1f)) SetModStrength(TimecycleStrength);
+	for (int i = 0; i < 829; i++)
+		if (Option(ArrayOfTimeCycles[i])) SetMod(ArrayOfTimeCycles[i]);
+
+	End("Time cycle Modifiers");
+
+}
+
+
+
+
+#include "common.hpp"
+#include "natives.hpp"
+#include "gui.hpp"
+#include "MenuFunctions.hpp"
+#include <imgui.h>
+#include <imgui_internal.h>
+#include <d3d11.h>
+#include <renderer.hpp>
+using namespace big;
+using namespace std;
+/*
+ClothingArray: 6
+DarwID: 0
+TextureID: 3
+Number of DarwID: 32
+Number of TextureID: 1
+Row: 3
+*/
+string ClothingNames[]{
+    "Beard/Mask",
+    "Hair",
+    "Torso",
+    "Legs",
+    "Hands/Back",
+    "Shoe",
+    "Random Stuff",
+    "Accessory/Tops",
+    "Task/Armour",
+    "Emblem/Decals",
+    "Torso(Outer)",
+
+
+};
+
+bool setWindowPos;
+void ClothingMenu()
+{
+    int DrawID = 0, GetDrawID = 2, TextureID = 1, GetTextureID = 3;
+    int ClothingArray[12][4];
+    for (int row = 0; row < 11; row++)
+    {
+       
+
+        ClothingArray[row][DrawID] = PED::GET_PED_DRAWABLE_VARIATION(PLAYER::PLAYER_PED_ID(), row);
+        ClothingArray[row][TextureID] = PED::GET_PED_TEXTURE_VARIATION(PLAYER::PLAYER_PED_ID(), row);
+        ClothingArray[row][GetDrawID] = PED::GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(PLAYER::PLAYER_PED_ID(), row);
+        ClothingArray[row][GetTextureID] = PED::GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(PLAYER::PLAYER_PED_ID(), row, ClothingArray[row][DrawID]);
+
+
+        if (Int(StringToChar(ClothingNames[row] + " Option"), ClothingArray[row][DrawID], 0, ClothingArray[row][GetDrawID], 1))
+        {
+            //if (ClothingArray[row][DrawID] == -1) ClothingArray[row][DrawID] = 0;
+            if (PED::IS_PED_COMPONENT_VARIATION_VALID(PLAYER::PLAYER_PED_ID(), row, ClothingArray[row][DrawID], ClothingArray[row][TextureID]))
+                PED::SET_PED_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID(), row, ClothingArray[row][DrawID], ClothingArray[row][TextureID], 0);
+            else
+                PED::SET_PED_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID(), row, ClothingArray[row][DrawID], 0, 0);
+        }
+        
+        if (Int(StringToChar(ClothingNames[row] + " Style"), ClothingArray[row][TextureID], 0, ClothingArray[row][GetTextureID], 1))
+        {
+            //if (ClothingArray[row][TextureID] == -1) ClothingArray[row][TextureID] = 0;
+
+            if (PED::IS_PED_COMPONENT_VARIATION_VALID(PLAYER::PLAYER_PED_ID(), row, ClothingArray[row][DrawID], ClothingArray[row][TextureID]))
+                PED::SET_PED_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID(), row, ClothingArray[row][DrawID], ClothingArray[row][TextureID], 0);
+            else
+                PED::SET_PED_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID(), row, ClothingArray[row][DrawID], 0, 0);
+        }
+
+    }
+}
+
+
+
+
+
