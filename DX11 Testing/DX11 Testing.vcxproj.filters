@@ -36,14 +36,20 @@
     <Filter Include="Header Files\TestLand\Not Working on\SouthsUI">
       <UniqueIdentifier>{77a24a45-170e-4952-8dc4-295b6eba194f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\TestLand\Control">
-      <UniqueIdentifier>{b3f2f8d9-005d-469c-849f-709136941701}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Misc">
       <UniqueIdentifier>{91f3bb69-8e19-4bff-a288-056db2c0e361}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\TestLand\BlueMenu\Backend">
       <UniqueIdentifier>{2616d525-551f-4609-adfe-33c84723b9f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestLand\BlueMenu\Control">
+      <UniqueIdentifier>{b3f2f8d9-005d-469c-849f-709136941701}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestLand\BlueMenu\Option">
+      <UniqueIdentifier>{d6192da0-09e9-4e4b-9ce4-ac8e78d738ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestLand\BlueMenu\Backend\Main">
+      <UniqueIdentifier>{a56de60f-358b-41e3-85c5-7372df5b04f7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -71,14 +77,20 @@
     <ClCompile Include="Aston.cpp">
       <Filter>Header Files\TestLand\Not Working on\SouthsUI</Filter>
     </ClCompile>
-    <ClCompile Include="Blue.cpp">
-      <Filter>Header Files\TestLand\BlueMenu</Filter>
-    </ClCompile>
     <ClCompile Include="Control.cpp">
-      <Filter>Header Files\TestLand\Control</Filter>
+      <Filter>Header Files\TestLand\BlueMenu\Control</Filter>
     </ClCompile>
     <ClCompile Include="BluesUI.cpp">
       <Filter>Header Files\TestLand\BlueMenu\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="Option.cpp">
+      <Filter>Header Files\TestLand\BlueMenu\Option</Filter>
+    </ClCompile>
+    <ClCompile Include="Blue.cpp">
+      <Filter>Header Files\TestLand\BlueMenu\Backend\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Header Files\TestLand\BlueMenu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -136,17 +148,20 @@
     <ClInclude Include="Simple UI.h">
       <Filter>Header Files\TestLand\Not Working on\Broken UI need to fix idk when\Simple</Filter>
     </ClInclude>
-    <ClInclude Include="Blue.h">
-      <Filter>Header Files\TestLand\BlueMenu</Filter>
-    </ClInclude>
     <ClInclude Include="UI.h">
       <Filter>Header Files\TestLand\Not Working on\Broken UI need to fix idk when</Filter>
     </ClInclude>
     <ClInclude Include="Control.h">
-      <Filter>Header Files\TestLand\Control</Filter>
+      <Filter>Header Files\TestLand\BlueMenu\Control</Filter>
     </ClInclude>
     <ClInclude Include="BluesUI.h">
       <Filter>Header Files\TestLand\BlueMenu\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="Option.h">
+      <Filter>Header Files\TestLand\BlueMenu\Option</Filter>
+    </ClInclude>
+    <ClInclude Include="Blue.h">
+      <Filter>Header Files\TestLand\BlueMenu\Backend\Main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,8 @@
 #include "IncludeFiles.h"
-bool  Control::LeftPressed, Control::RightPressed, Control::SelectPressed, Control::isMenuOpen = true, Control::LockMouse, Control::LockNumEdit;
+bool  Control::LeftPressed, Control::RightPressed, Control::SelectPressed, Control::LockMouse, Control::LockNumEdit;
 int KeyPressDelay = 150, maxOption = 16, OptionCount, currentOption, OptionCountForBackGround,
 KeyPressDelayTickCount = GetTickCount();
-
+bool isMenuOpen = true;
 Control* control = new Control();
 
 #define IsKeyDown(key) GetAsyncKeyState(key)
@@ -54,6 +54,12 @@ bool FavKey()
         return true;
     return false;
 }
+bool Control::MiscKey()
+{
+    if (GetAsyncKeyState(VK_KEY_C))
+        return true;
+    return false;
+}
 bool UpKey()
 {
 
@@ -64,14 +70,14 @@ bool UpKey()
 
     return false;
 }
-bool ScrollUp()
+bool Control::ScrollUp()
 {
 
     if (ImGui::GetIO().MouseWheel == 1)
         return true;
     return false;
 }
-bool ScrollDown()
+bool Control::ScrollDown()
 {
     if (ImGui::GetIO().MouseWheel == -1)
         return true;
@@ -155,7 +161,8 @@ void Control::controlTick()
 
         if (OpenKey())
         {
-            isMenuOpen = true;
+            isMenuOpen = !isMenuOpen;
+            SubMenuLevel == 0 ? OnSubMenu = SubMenuArray[SubMenuLevel] : OnSubMenu = SubMenuArray[SubMenuLevel];
             KeyPressDelayTickCount = GetTickCount();
         }
         else if (MouseKey())
@@ -212,7 +219,7 @@ void Control::controlTick()
             }
             else  if (BackKey())
             {
-                //BackSubmenu(); //go back
+                BackSubmenu();
                 KeyPressDelayTickCount = GetTickCount();
             }
             else if (RightKey())
@@ -232,4 +239,54 @@ void Control::controlTick()
     OptionCount = 0;
     OptionCountForBackGround = 0;
 
+}
+
+std::string StringReturn; bool InputWindowInUse;
+std::string KeyboardOnScreen()
+{
+    InputWindowInUse = true;
+    while (InputWindowInUse)
+    {
+        Control::LockMouse = true;
+        //CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
+        //WAIT(0);
+    }
+    InputWindowInUse = false;
+    Control::LockMouse = false;
+    return StringReturn;
+}
+void setKeyOnScreen()
+{
+    if (InputWindowInUse)
+    {
+        ImGui::SetNextWindowPos(ImVec2(500, 220));
+        ImGui::SetNextWindowSize(ImVec2(270, 100));
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, Blues_UI->WhiteLowAlpha);
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, Blues_UI->BlackLowAlpha);
+        ImGui::PushStyleColor(ImGuiCol_Button, Blues_UI->BlackLowAlpha);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
+        if (ImGui::Begin("TextWindow", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
+        {
+
+            static char Text[255] = "";
+            ImGui::Text("Enter value");
+            ImGui::InputText("", Text, IM_ARRAYSIZE(Text));
+            if (ImGui::Button("Ok", ImVec2(70, 30)))
+            {
+                StringReturn = Text;
+                InputWindowInUse = false;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel", ImVec2(70, 30)))
+            {
+                StringReturn = "Unknown";
+                InputWindowInUse = false;
+            }
+        }
+        ImGui::PopStyleVar();
+        ImGui::PopStyleColor();
+        ImGui::PopStyleColor();
+        ImGui::PopStyleColor();
+        ImGui::End();
+    }
 }

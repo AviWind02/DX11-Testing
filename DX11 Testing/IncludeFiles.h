@@ -28,7 +28,7 @@
 #include "BluesUI.h"
 #include "Blue.h"
 #include "Control.h"
-
+#include "Option.h"
 #include "Functions.h"
 #include "Font.h"
 
