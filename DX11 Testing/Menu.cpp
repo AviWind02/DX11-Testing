@@ -33,7 +33,7 @@ void Main()
 		break;
 		case TestMenu:
 		{
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 24; i++)
 				if (Option("Test" + std::to_string(i)))
 					std::cout << i << std::endl;
 			Int("Int", test, 0, 100);
