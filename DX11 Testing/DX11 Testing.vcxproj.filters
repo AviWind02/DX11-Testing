@@ -15,9 +15,6 @@
     <Filter Include="Header Files\TestLand">
       <UniqueIdentifier>{8c6dc5fa-4113-429b-aa19-c4ebcd5b3ca5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\TestLand\BlueMenu">
-      <UniqueIdentifier>{486afbad-5da2-4091-8770-e8f2e3af1280}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\TestLand\Not Working on">
       <UniqueIdentifier>{c36498ad-585d-402b-bda3-d842f35bfa8f}</UniqueIdentifier>
     </Filter>
@@ -39,17 +36,23 @@
     <Filter Include="Header Files\Misc">
       <UniqueIdentifier>{91f3bb69-8e19-4bff-a288-056db2c0e361}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\TestLand\BlueMenu\Backend">
-      <UniqueIdentifier>{2616d525-551f-4609-adfe-33c84723b9f1}</UniqueIdentifier>
+    <Filter Include="Header Files\TestLand\Horizon UI">
+      <UniqueIdentifier>{b10f8827-9b77-4637-8330-6c9f3de7d6f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\TestLand\BlueMenu\Control">
+    <Filter Include="Header Files\TestLand\Control">
       <UniqueIdentifier>{b3f2f8d9-005d-469c-849f-709136941701}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\TestLand\BlueMenu\Option">
-      <UniqueIdentifier>{d6192da0-09e9-4e4b-9ce4-ac8e78d738ca}</UniqueIdentifier>
+    <Filter Include="Header Files\TestLand\RedMenu">
+      <UniqueIdentifier>{432fd3ba-3bbf-4e69-8e66-f2314d674a30}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\TestLand\BlueMenu\Backend\Main">
-      <UniqueIdentifier>{a56de60f-358b-41e3-85c5-7372df5b04f7}</UniqueIdentifier>
+    <Filter Include="Header Files\TestLand\RedMenu\backend">
+      <UniqueIdentifier>{0d46961e-a72f-4086-9446-ec1110b40400}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestLand\RedMenu\backend\UI">
+      <UniqueIdentifier>{74a154f7-dd15-4aa3-b193-ad4e298dfe1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestLand\RedMenu\Frontend">
+      <UniqueIdentifier>{30a8c9e6-a5c0-48de-8d7a-9739f361ca19}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -78,19 +81,19 @@
       <Filter>Header Files\TestLand\Not Working on\SouthsUI</Filter>
     </ClCompile>
     <ClCompile Include="Control.cpp">
-      <Filter>Header Files\TestLand\BlueMenu\Control</Filter>
+      <Filter>Header Files\TestLand\Control</Filter>
     </ClCompile>
-    <ClCompile Include="BluesUI.cpp">
-      <Filter>Header Files\TestLand\BlueMenu\Backend</Filter>
+    <ClCompile Include="Horizon.cpp">
+      <Filter>Header Files\TestLand\Horizon UI</Filter>
     </ClCompile>
-    <ClCompile Include="Option.cpp">
-      <Filter>Header Files\TestLand\BlueMenu\Option</Filter>
+    <ClCompile Include="RedMenu\backend.cpp">
+      <Filter>Header Files\TestLand\RedMenu\backend</Filter>
     </ClCompile>
-    <ClCompile Include="Blue.cpp">
-      <Filter>Header Files\TestLand\BlueMenu\Backend\Main</Filter>
+    <ClCompile Include="RedMenu\UI.cpp">
+      <Filter>Header Files\TestLand\RedMenu\backend\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Menu.cpp">
-      <Filter>Header Files\TestLand\BlueMenu</Filter>
+    <ClCompile Include="RedMenu\Menu.cpp">
+      <Filter>Header Files\TestLand\RedMenu\Frontend</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -152,16 +155,16 @@
       <Filter>Header Files\TestLand\Not Working on\Broken UI need to fix idk when</Filter>
     </ClInclude>
     <ClInclude Include="Control.h">
-      <Filter>Header Files\TestLand\BlueMenu\Control</Filter>
+      <Filter>Header Files\TestLand\Control</Filter>
     </ClInclude>
-    <ClInclude Include="BluesUI.h">
-      <Filter>Header Files\TestLand\BlueMenu\Backend</Filter>
+    <ClInclude Include="RedMenu\backend.h">
+      <Filter>Header Files\TestLand\RedMenu\backend</Filter>
     </ClInclude>
-    <ClInclude Include="Option.h">
-      <Filter>Header Files\TestLand\BlueMenu\Option</Filter>
+    <ClInclude Include="RedMenu\UI.h">
+      <Filter>Header Files\TestLand\RedMenu\backend\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Blue.h">
-      <Filter>Header Files\TestLand\BlueMenu\Backend\Main</Filter>
+    <ClInclude Include="RedMenu\Menu.h">
+      <Filter>Header Files\TestLand\RedMenu\Frontend</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

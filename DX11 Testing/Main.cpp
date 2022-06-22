@@ -1,19 +1,21 @@
 #include "IncludeFiles.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#include "BluesUI.h"
-
+#include "RedMenu/Menu.h"
+#pragma warning(disable : 4996).
 // Data
 static ID3D11Device* g_pd3dDevice = NULL;
 static ID3D11DeviceContext* g_pd3dDeviceContext = NULL;
 static IDXGISwapChain* g_pSwapChain = NULL;
 static ID3D11RenderTargetView* g_mainRenderTargetView = NULL;
+ImFont* m_font, *m_font_big;
 
 // Forward declarations of helper functions
 bool CreateDeviceD3D(HWND hWnd);
 void CleanupDeviceD3D();
 void CreateRenderTarget();
 void CleanupRenderTarget();
+extern void horizonTick();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 bool LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height)
 {
@@ -60,23 +62,27 @@ bool LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** out_sr
 
     return true;
 }
-
-void Loadimage(const char* ID, const char* FilePath, ImVec2 Pos, ImVec2 Size, ImVec2 Sizep)
+bool LoadPic = true;
+ID3D11ShaderResourceView* my_texture = NULL;
+void Loadimage(const char* ID, const char* FilePath, ImVec2 Pos, ImVec2 Size)
 {
-    int my_image_width = 0;
-    int my_image_height = 0;
-    ID3D11ShaderResourceView* my_texture = NULL;
-    bool ret = LoadTextureFromFile(FilePath, &my_texture, &my_image_width, &my_image_height);
-    IM_ASSERT(ret);
+    if (LoadPic)
+    {
+        int my_image_width = 0;
+        int my_image_height = 0;
+        bool ret = LoadTextureFromFile(FilePath, &my_texture, &my_image_width, &my_image_height);
+        IM_ASSERT(ret);
+        LoadPic = false;
+    }
 
-    ImGui::SetNextWindowPos(Pos);
-    ImGui::SetNextWindowSize(Size);
+    //ImGui::SetNextWindowPos(Pos);
+    //ImGui::SetNextWindowSize(Size);
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
-    if (ImGui::Begin(ID, 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove  | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
+    if (ImGui::Begin(ID))
     {
    
-        ImGui::Image((void*)my_texture, Sizep);
+        ImGui::Image((void*)my_texture, Size);
     }
     ImGui::PopStyleVar();
     ImGui::PopStyleColor();
@@ -86,7 +92,6 @@ void Loadimage(const char* ID, const char* FilePath, ImVec2 Pos, ImVec2 Size, Im
 int main()
 {
     std::cout << "Starting.." << std::endl;
-
     // Create application window
     //ImGui_ImplWin32_EnableDpiAwareness();
     WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, _T("ImGui Example"), NULL };
@@ -120,7 +125,11 @@ int main()
     ImGui_ImplWin32_Init(hwnd);
     ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
 
-    //font->LoadFonts();
+    ImFontConfig font_cfg{};
+    font_cfg.FontDataOwnedByAtlas = false;
+    std::strcpy(font_cfg.Name, "Rubik");
+    m_font = ImGui::GetIO().Fonts->AddFontFromMemoryTTF(const_cast<std::uint8_t*>(font_rubik), sizeof(font_rubik), 20.f, &font_cfg);
+    m_font_big = ImGui::GetIO().Fonts->AddFontFromMemoryTTF(const_cast<std::uint8_t*>(font_rubik), sizeof(font_rubik), 25.f, &font_cfg);
 
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
@@ -173,8 +182,9 @@ int main()
         //TopUI::MenuUI->Tick();
         //input->Tick();
         //AstonTick();
-        blueUI->tick();
-
+       // blueUI->tick();
+        //horizonTick();
+        redMenu::tick();
         // Rendering
         ImGui::Render();
         g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, NULL);

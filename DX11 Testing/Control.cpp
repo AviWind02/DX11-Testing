@@ -1,10 +1,16 @@
 #include "IncludeFiles.h"
+#include"RedMenu/backend.h"
+#include "RedMenu/UI.h"
+using namespace redMenu;
 bool  Control::LeftPressed, Control::RightPressed, Control::SelectPressed, Control::LockMouse, Control::LockNumEdit;
-int KeyPressDelay = 150, maxOption = 16, OptionCount, currentOption, OptionCountForBackGround,
-KeyPressDelayTickCount = GetTickCount();
+int KeyPressDelay = 150, maxOption = 16, maxOptionforTop = 3, OptionCount, OptionCountforTopMenu, currentOptionforTopMenu, currentOption, OptionCountForBackGround,
+KeyPressDelayTickCount = GetTickCount64();
 bool isMenuOpen = true;
 Control* control = new Control();
-
+inline char* StringToChar(std::string string) // Handy little thing
+{
+    return _strdup(string.c_str());
+}
 #define IsKeyDown(key) GetAsyncKeyState(key)
 bool Forward()
 {
@@ -57,6 +63,13 @@ bool FavKey()
 bool Control::MiscKey()
 {
     if (GetAsyncKeyState(VK_KEY_C))
+        return true;
+    return false;
+}
+bool scrollTopMenu()
+{
+
+    if (GetAsyncKeyState(VK_INSERT))
         return true;
     return false;
 }
@@ -132,7 +145,7 @@ bool Control::MouseClick(const char* text, ImVec2 pos, ImVec2 size, bool* out_ho
 {
     ImGuiWindow* window = ImGui::GetCurrentWindow();
     const ImGuiID id = window->GetID(text);
-    const ImRect bb(ImVec2(pos.x, pos.y), Blues_UI->add(&pos, &size));
+    const ImRect bb(ImVec2(pos.x, pos.y), g_backend->add(&pos, &size));
     return ImGui::ButtonBehavior(bb, id, out_hovered, out_held);
 }
 
@@ -142,33 +155,35 @@ bool Control::MouseClickOption(std::string text, bool* out_hovered, bool* out_he
     {
 
         float YPostion = 25.f * OptionCount - 20;
-        ImVec2 TextPos{ Blue::MenuXpos, YPostion + Blue::MenuYpos };
-        return MouseClick(Blues_UI->StringToChar(text), TextPos, { (blueUI->MenuWidth - 25.f), 25.f }, out_hovered, out_held);
+        ImVec2 TextPos{ g_GUI->MenuXpos, YPostion + g_GUI->MenuYpos };
+        return MouseClick(StringToChar(text), TextPos, { (g_GUI->MenuWidth - 25.f), 25.f }, out_hovered, out_held);
+   
     }
     else if (OptionCount > (currentOption - maxOption) && OptionCount <= currentOption)
     {
         float YPostion = 25.f * ((OptionCount - 1) - (currentOption - maxOption));
-        ImVec2 TextPos{ Blue::MenuXpos, YPostion + Blue::MenuYpos };
-        return MouseClick(Blues_UI->StringToChar(text), TextPos, { (blueUI->MenuWidth - 25.f), 25.f }, out_hovered, out_held);
+        ImVec2 TextPos{ g_GUI->MenuXpos, YPostion + g_GUI->MenuYpos };
+        return MouseClick(StringToChar(text), TextPos, { (g_GUI->MenuWidth - 25.f), 25.f }, out_hovered, out_held);
     }
     return false;
 }
+extern void setKeyOnScreen();
 
 void Control::controlTick()
 {
-    if (GetTickCount() - KeyPressDelayTickCount > 150)
+    if (GetTickCount64() - KeyPressDelayTickCount > 150)
     {
 
         if (OpenKey())
         {
             isMenuOpen = !isMenuOpen;
-            SubMenuLevel == 0 ? OnSubMenu = SubMenuArray[SubMenuLevel] : OnSubMenu = SubMenuArray[SubMenuLevel];
-            KeyPressDelayTickCount = GetTickCount();
+           // SubMenuLevel == 0 ? OnSubMenu = SubMenuArray[SubMenuLevel] : OnSubMenu = SubMenuArray[SubMenuLevel];
+            KeyPressDelayTickCount = GetTickCount64();
         }
         else if (MouseKey())
         {
             LockMouse = !LockMouse;
-            KeyPressDelayTickCount = GetTickCount();
+            KeyPressDelayTickCount = GetTickCount64();
         }
     }
 
@@ -180,57 +195,63 @@ void Control::controlTick()
         SelectPressed = false;
         if (!LockNumEdit)
         {
-            if (GetTickCount() - KeyPressDelayTickCount > 50)
+            if (GetTickCount64() - KeyPressDelayTickCount > 50)
             {
 
                 if (ScrollUp())
                 {
                     currentOption > 1 ? currentOption-- : currentOption = OptionCount;
-                    KeyPressDelayTickCount = GetTickCount();
+                    KeyPressDelayTickCount = GetTickCount64();
                 }
                 else  if (ScrollDown())
                 {
 
                     currentOption < OptionCount ? currentOption++ : currentOption = 1;
-                    KeyPressDelayTickCount = GetTickCount();
+                    KeyPressDelayTickCount = GetTickCount64();
 
                 }
             }
         }
 
-        if (GetTickCount() - KeyPressDelayTickCount > KeyPressDelay)
+        if (GetTickCount64() - KeyPressDelayTickCount > KeyPressDelay)
         {
+            if (scrollTopMenu())
+            {
+                currentOptionforTopMenu > 1 ? currentOptionforTopMenu-- : currentOptionforTopMenu = OptionCountforTopMenu;
+                KeyPressDelayTickCount = GetTickCount64();
+            }
+
 
             if (UpKey())
             {
                 currentOption > 1 ? currentOption-- : currentOption = OptionCount;
-                KeyPressDelayTickCount = GetTickCount();
+                KeyPressDelayTickCount = GetTickCount64();
             }
             else  if (DownKey())
             {
 
                 currentOption < OptionCount ? currentOption++ : currentOption = 1;
-                KeyPressDelayTickCount = GetTickCount();
+                KeyPressDelayTickCount = GetTickCount64();
             }
             else  if (SelectKey())
             {
                 SelectPressed = true;
-                KeyPressDelayTickCount = GetTickCount();
+                KeyPressDelayTickCount = GetTickCount64();
             }
             else  if (BackKey())
             {
-                BackSubmenu();
-                KeyPressDelayTickCount = GetTickCount();
+               // BackSubmenu();
+                KeyPressDelayTickCount = GetTickCount64();
             }
             else if (RightKey())
             {
                 RightPressed = true;
-                KeyPressDelayTickCount = GetTickCount();
+                KeyPressDelayTickCount = GetTickCount64();
             }
             else  if (LeftKey())
             {
                 LeftPressed = true;
-                KeyPressDelayTickCount = GetTickCount();
+                KeyPressDelayTickCount = GetTickCount64();
             }
 
 
@@ -238,55 +259,7 @@ void Control::controlTick()
     }
     OptionCount = 0;
     OptionCountForBackGround = 0;
+    ImGui::GetIO().MouseWheel = 0;
 
 }
 
-std::string StringReturn; bool InputWindowInUse;
-std::string KeyboardOnScreen()
-{
-    InputWindowInUse = true;
-    while (InputWindowInUse)
-    {
-        Control::LockMouse = true;
-        //CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
-        //WAIT(0);
-    }
-    InputWindowInUse = false;
-    Control::LockMouse = false;
-    return StringReturn;
-}
-void setKeyOnScreen()
-{
-    if (InputWindowInUse)
-    {
-        ImGui::SetNextWindowPos(ImVec2(500, 220));
-        ImGui::SetNextWindowSize(ImVec2(270, 100));
-        ImGui::PushStyleColor(ImGuiCol_FrameBg, Blues_UI->WhiteLowAlpha);
-        ImGui::PushStyleColor(ImGuiCol_WindowBg, Blues_UI->BlackLowAlpha);
-        ImGui::PushStyleColor(ImGuiCol_Button, Blues_UI->BlackLowAlpha);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
-        if (ImGui::Begin("TextWindow", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
-        {
-
-            static char Text[255] = "";
-            ImGui::Text("Enter value");
-            ImGui::InputText("", Text, IM_ARRAYSIZE(Text));
-            if (ImGui::Button("Ok", ImVec2(70, 30)))
-            {
-                StringReturn = Text;
-                InputWindowInUse = false;
-            }
-            ImGui::SameLine();
-            if (ImGui::Button("Cancel", ImVec2(70, 30)))
-            {
-                StringReturn = "Unknown";
-                InputWindowInUse = false;
-            }
-        }
-        ImGui::PopStyleVar();
-        ImGui::PopStyleColor();
-        ImGui::PopStyleColor();
-        ImGui::PopStyleColor();
-        ImGui::End();
-    }
-}

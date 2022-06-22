@@ -25,10 +25,7 @@
 #pragma comment(lib, "Strmiids.lib")
 //Menu Stuff
 //#include "UI.h"
-#include "BluesUI.h"
-#include "Blue.h"
 #include "Control.h"
-#include "Option.h"
 #include "Functions.h"
 #include "Font.h"
 

@@ -14,7 +14,7 @@ public:
 	bool MiscKey();
 
 };
-extern int maxOption, OptionCount, currentOption, OptionCountForBackGround;
+extern int KeyPressDelay, maxOption, maxOptionforTop, OptionCount, OptionCountforTopMenu, currentOptionforTopMenu, currentOption, OptionCountForBackGround;
 extern bool isMenuOpen; std::string KeyboardOnScreen();
 
 extern Control* control;
