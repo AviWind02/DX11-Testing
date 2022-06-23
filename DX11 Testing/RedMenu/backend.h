@@ -3,6 +3,7 @@ inline char* StringToChar(std::string string); // Handy little thing
 
 namespace redMenu
 {
+	extern bool isMenuOpen;
 	class backend
 	{
 
@@ -11,11 +12,27 @@ namespace redMenu
 		void Text(std::string Text, ImVec4 Colour, ImVec2 Pos, ImFont* font = nullptr, bool Right = false);
 		void RectFilled(ImVec4 Colour, ImVec2 Pos, ImVec2 Size, bool Filled = true, float thik = 1.f, float round = 0.f);
 		void RectFilled(ImVec4 Colour, ImVec4 Colour2, ImVec4 Colour3, ImVec4 Colour4, ImVec2 Pos, ImVec2 Size, bool Filled = true);
+		std::string getKeyCliked();
 
 		char* StringToChar(std::string string);
 		ImVec2 add(ImVec2* vectorA, ImVec2* vectorB);
 		float getRightTextX(float Pos);
 
+		enum SubMenu {
+			MainMenu_Local,/*All local options start fromhere*/
+			MainMenu_Online,/*All Online options start from here*/
+			MainMenu_Protection,/*All Protection options start from here*/
+
+		}; SubMenu OnSubMenu = MainMenu_Local;
+
+		enum Main_SubMenu {
+			Main_Local,
+			Main_Online,
+			Main_Protection
+		}; Main_SubMenu Main_OnSubMenu = Main_Protection;
+
+		void BackSubmenu();
+		void NextSubmenu(backend::SubMenu Menu);
 
 
 
@@ -44,7 +61,7 @@ namespace redMenu
 
 		const ImVec4 RedOrange = ImColor(255, 100, 73, 255);
 		const ImVec4 ChillerRedOrange = ImColor(254, 101, 0);
-
+		const ImVec4 TitleBlockLavaOrange = ImColor(209, 75, 1);
 
 		const ImVec4 BlackLowAlpha = ImColor(0, 0, 0, 100);
 		const ImVec4 ClearColour = ImColor(0, 0, 0, 0);
@@ -72,6 +89,14 @@ namespace redMenu
 		const ImVec4 Grey = ImColor(0, 0, 0, 175);
 		const ImVec4 LowGrey = ImColor(0, 0, 0, 55);
 
+
 	};
 	extern backend* g_backend;
+
+	struct getKey { int numericvalue; std::string key; };
+
+	extern  std::vector<getKey> g_getKeys;
+
+
+
 }

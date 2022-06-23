@@ -3,9 +3,8 @@
 #include "RedMenu/UI.h"
 using namespace redMenu;
 bool  Control::LeftPressed, Control::RightPressed, Control::SelectPressed, Control::LockMouse, Control::LockNumEdit;
-int KeyPressDelay = 150, maxOption = 16, maxOptionforTop = 3, OptionCount, OptionCountforTopMenu, currentOptionforTopMenu, currentOption, OptionCountForBackGround,
+int KeyPressDelay = 150, maxOption = 10, maxOptionforTop = 3, OptionCount, OptionCountforTopMenu, currentOptionforTopMenu, currentOption, OptionCountForBackGround,
 KeyPressDelayTickCount = GetTickCount64();
-bool isMenuOpen = true;
 Control* control = new Control();
 inline char* StringToChar(std::string string) // Handy little thing
 {
@@ -167,7 +166,6 @@ bool Control::MouseClickOption(std::string text, bool* out_hovered, bool* out_he
     }
     return false;
 }
-extern void setKeyOnScreen();
 
 void Control::controlTick()
 {
@@ -217,6 +215,7 @@ void Control::controlTick()
         {
             if (scrollTopMenu())
             {
+                
                 currentOptionforTopMenu > 1 ? currentOptionforTopMenu-- : currentOptionforTopMenu = OptionCountforTopMenu;
                 KeyPressDelayTickCount = GetTickCount64();
             }

@@ -2,6 +2,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "RedMenu/Menu.h"
+#include "RedMenu/UI.h"
 #pragma warning(disable : 4996).
 // Data
 static ID3D11Device* g_pd3dDevice = NULL;
@@ -66,27 +67,13 @@ bool LoadPic = true;
 ID3D11ShaderResourceView* my_texture = NULL;
 void Loadimage(const char* ID, const char* FilePath, ImVec2 Pos, ImVec2 Size)
 {
-    if (LoadPic)
-    {
-        int my_image_width = 0;
-        int my_image_height = 0;
-        bool ret = LoadTextureFromFile(FilePath, &my_texture, &my_image_width, &my_image_height);
-        IM_ASSERT(ret);
-        LoadPic = false;
-    }
-
-    //ImGui::SetNextWindowPos(Pos);
-    //ImGui::SetNextWindowSize(Size);
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
-    if (ImGui::Begin(ID))
-    {
    
-        ImGui::Image((void*)my_texture, Size);
-    }
-    ImGui::PopStyleVar();
-    ImGui::PopStyleColor();
-    ImGui::End();
+    int my_image_width = 0;
+    int my_image_height = 0;
+    bool ret = LoadTextureFromFile(FilePath, &my_texture, &my_image_width, &my_image_height);
+    IM_ASSERT(ret);
+
+    ImGui::Image((void*)my_texture, Size);
 }
 //extern void AstonTick();
 int main()
@@ -184,7 +171,7 @@ int main()
         //AstonTick();
        // blueUI->tick();
         //horizonTick();
-        redMenu::tick();
+        redMenu::g_GUI->tick();
         // Rendering
         ImGui::Render();
         g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, NULL);

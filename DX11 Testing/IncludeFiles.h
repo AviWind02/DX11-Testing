@@ -28,7 +28,7 @@
 #include "Control.h"
 #include "Functions.h"
 #include "Font.h"
-
+#include"Options.h"
 
 #define VK_NOTHING	0x00				/*NULL*/
 #define VK_KEY_0	0x30                //('0')	0

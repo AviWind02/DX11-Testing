@@ -54,6 +54,12 @@
     <Filter Include="Header Files\TestLand\RedMenu\Frontend">
       <UniqueIdentifier>{30a8c9e6-a5c0-48de-8d7a-9739f361ca19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\TestLand\RedMenu\Frontend\Menu">
+      <UniqueIdentifier>{11547806-00a5-4307-a3da-2389ea367156}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestLand\RedMenu\Frontend\Options">
+      <UniqueIdentifier>{9274a0fb-6dfe-4445-ad19-0abfd7706c2d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -93,7 +99,10 @@
       <Filter>Header Files\TestLand\RedMenu\backend\UI</Filter>
     </ClCompile>
     <ClCompile Include="RedMenu\Menu.cpp">
-      <Filter>Header Files\TestLand\RedMenu\Frontend</Filter>
+      <Filter>Header Files\TestLand\RedMenu\Frontend\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Options.cpp">
+      <Filter>Header Files\TestLand\RedMenu\Frontend\Options</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -164,7 +173,10 @@
       <Filter>Header Files\TestLand\RedMenu\backend\UI</Filter>
     </ClInclude>
     <ClInclude Include="RedMenu\Menu.h">
-      <Filter>Header Files\TestLand\RedMenu\Frontend</Filter>
+      <Filter>Header Files\TestLand\RedMenu\Frontend\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Options.h">
+      <Filter>Header Files\TestLand\RedMenu\Frontend\Options</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

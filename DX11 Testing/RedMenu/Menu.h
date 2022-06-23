@@ -2,7 +2,7 @@
 #include <cstdint>
 extern  ImFont* m_font, *m_font_big;
 namespace redMenu {
-	void tick();
+	void Menu();
 }
 const std::uint8_t font_rubik[140732]
 {

@@ -14,7 +14,12 @@ public:
 	bool MiscKey();
 
 };
+extern bool UpKey();
+extern bool DownKey();
+extern bool RightKey();
+extern bool LeftKey();
 extern int KeyPressDelay, maxOption, maxOptionforTop, OptionCount, OptionCountforTopMenu, currentOptionforTopMenu, currentOption, OptionCountForBackGround;
-extern bool isMenuOpen; std::string KeyboardOnScreen();
+ std::string KeyboardOnScreen();
+extern bool scrollTopMenu();
 
 extern Control* control;

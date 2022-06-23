@@ -5,7 +5,35 @@ namespace redMenu
 {
     backend* g_backend = new backend();
 
+    bool isMenuOpen = true;
+    bool MouseLock;
+    int currentOption = 1;
+    int OptionCount = 0;
+    int SubMenuLevel;
+    backend::SubMenu SubMenuArray[1000];
+    int LastOption[999];
 
+
+    void backend::NextSubmenu(backend::SubMenu Menu)
+    {
+        SubMenuArray[SubMenuLevel] = OnSubMenu;
+        LastOption[SubMenuLevel] = currentOption;
+        SubMenuLevel++;
+        OnSubMenu = Menu;
+        currentOption = 1;
+    }
+
+    void backend::BackSubmenu()
+    {
+        if (g_backend->OnSubMenu != g_backend->MainMenu_Local 
+            && g_backend->OnSubMenu != g_backend->MainMenu_Online 
+            && g_backend->OnSubMenu != g_backend->MainMenu_Protection)
+        {
+            SubMenuLevel--;
+            OnSubMenu = SubMenuArray[SubMenuLevel];
+            currentOption = LastOption[SubMenuLevel];
+        }
+    }
 
     ImVec4 backend::MiddleBoxBack = g_backend->Black;
     
@@ -20,6 +48,64 @@ namespace redMenu
     ImVec4 backend::BottomTextCount = g_backend->White;
     
 
+    std::vector<getKey> g_getKeys
+    {
+        //Number//
+        {0x30, "0"},
+        {0x31, "1"},
+        {0x32, "2"},
+        {0x33, "3"},
+        {0x34, "4"},
+        {0x35, "5"},
+        {0x36, "6"},
+        {0x37, "7"},
+        {0x38, "8"},
+        {0x39, "9"},
+        //ABC//
+        {0x41,  "A"},
+        {0x42,  "B"},
+        {0x43,  "C"},
+        {0x44,  "D"},
+        {0x45,  "E"},
+        {0x46,  "F"},
+        {0x47,  "G"},
+        {0x48,  "H"},
+        {0x49,  "I"},
+        {0x4A,  "J"},
+        {0x4B,  "K"},
+        {0x4C,  "L"},
+        {0x4D,  "M"},
+        {0x4E,  "N"},
+        {0x4F,  "O"},
+        {0x50,  "P"},
+        {0x51,  "Q"},
+        {0x52,  "R"},
+        {0x53,  "S"},
+        {0x54,  "T"},
+        {0x55,  "U"},
+        {0x56,  "V"},
+        {0x57,  "W"},
+        {0x58,  "X"},
+        {0x59,  "Y"},
+        {0x5A,  "Z"},
+        //NUMPAD//
+        {0x60, "0"},
+        {0x61, "1"},
+        {0x62, "2"},
+        {0x63, "3"},
+        {0x64, "4"},
+        {0x65, "5"},
+        {0x66, "6"},
+        {0x67, "7"},
+        {0x68, "8"},
+        {0x69, "9"},
+
+
+        //Misc//
+        {0x20, " "},//space
+        {0x08, "BACKSPACE"},//backspace
+        {0x0D, "ENTER"},//backspace
+    };
 
     char* backend::StringToChar(std::string string)
     {
@@ -35,6 +121,11 @@ namespace redMenu
         return result;
     }
 
+    std::string  backend::getKeyCliked()
+    {
+   
+        return "";
+    }
 
     void backend::Text(std::string Text, ImVec4 Colour, ImVec2 Pos, ImFont* font, bool Right)
     {
