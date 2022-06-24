@@ -10,4 +10,4 @@ bool Float(std::string text, float& Main, float min = 0.f, float max = 99.99f, f
 bool Int(std::string text, int& Main, int min = 0, int max = 99, int step = 1, std::string description = "Click to Enter or use right and left.", bool returnOnSideClick = true, int delay = NULL);
 bool SubMenu(std::string text, redMenu::backend::SubMenu SubMenu, std::string description = "No description.");
 bool Toggle(std::string text, bool* toggle, std::string description = "No description.");
-bool OptionKeyInput(std::string option, std::string* ouput, int maxChar);
+bool OptionKeyInput(std::string option, std::string* ouput, int maxChar = 15);

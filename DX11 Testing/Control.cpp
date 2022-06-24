@@ -6,6 +6,9 @@ bool  Control::LeftPressed, Control::RightPressed, Control::SelectPressed, Contr
 int KeyPressDelay = 150, maxOption = 10, maxOptionforTop = 3, OptionCount, OptionCountforTopMenu, currentOptionforTopMenu, currentOption, OptionCountForBackGround,
 KeyPressDelayTickCount = GetTickCount64();
 Control* control = new Control();
+bool isMenuOpen = true;
+
+bool MouseLock;
 inline char* StringToChar(std::string string) // Handy little thing
 {
     return _strdup(string.c_str());

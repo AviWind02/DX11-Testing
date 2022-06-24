@@ -1,6 +1,7 @@
 #include "IncludeFiles.h"
 #include "RedMenu/UI.h"
 #include "RedMenu/backend.h"
+#include"Control.h"
 #pragma warning(disable : 4996).
 
 using namespace redMenu;

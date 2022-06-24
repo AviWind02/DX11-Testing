@@ -215,6 +215,8 @@
     <ClCompile Include="RedMenu\backend.cpp" />
     <ClCompile Include="RedMenu\Menu.cpp" />
     <ClCompile Include="RedMenu\UI.cpp" />
+    <ClCompile Include="Summer UI\GUI.cpp" />
+    <ClCompile Include="Summer UI\Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Control.h" />
@@ -240,6 +242,8 @@
     <ClInclude Include="Simple Menu.h" />
     <ClInclude Include="Simple UI.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Summer UI\GUI.h" />
+    <ClInclude Include="Summer UI\Menu.h" />
     <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>

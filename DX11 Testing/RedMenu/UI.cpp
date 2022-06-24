@@ -9,8 +9,7 @@ namespace redMenu
 {
 	float GUI::MenuWidth = 360, GUI::MenuHight = 500, GUI::MenuXpos = 100, GUI::MenuYpos = 120;
 	int inputKeyDelay;
-	GUI* g_GUI = new GUI();
-
+	GUI* g_GUI;
 
 	void Titleblock()
 	{
@@ -18,7 +17,7 @@ namespace redMenu
 		{
 			float Y;
 			if (OptionCountForBackGround < maxOption) Y = (float)((OptionCountForBackGround + 1) * 25); else Y = ((maxOption + 2) * 25) - 5;
-			//Loadimage("Title", "C:\\Users\\gilla\\Desktop\\ETERNITY-HEADER-DONE_1.jpg", { GUI::MenuXpos - 10,  GUI::MenuYpos - 80 }, { (float)GUI::MenuWidth + 15, 90 });
+			Loadimage("Title", "C:\\Users\\gilla\\Desktop\\ETERNITY-HEADER-DONE_1.jpg", { GUI::MenuXpos - 10,  GUI::MenuYpos - 80 }, { (float)GUI::MenuWidth + 15, 90 });
 			//Loadimage("e", "C:\\Users\\gilla\\Desktop\\backdropTest.jpg", { GUI::MenuXpos - 10,  GUI::MenuYpos - 80 }, { GUI::MenuWidth, Y });
 			g_backend->RectFilled(g_backend->Black, ImVec2(GUI::MenuXpos, GUI::MenuYpos - 27), ImVec2(GUI::MenuWidth, 25));
 			g_backend->RectFilled(g_backend->Black, { GUI::MenuXpos,   GUI::MenuYpos - 27 }, { GUI::MenuWidth, 25 }, false, 2.5f);//Line Around
@@ -172,7 +171,7 @@ namespace redMenu
 							}
 							return false;
 						}
-						if (clicked.key == "ENTER")
+						else if (clicked.key == "ENTER")
 						{
 							if (optionInputString.length() > 1)
 							{
@@ -183,7 +182,7 @@ namespace redMenu
 							}
 							return false;
 						}
-						if (optionInputString.length() < l_maxCharCount)
+						else if (optionInputString.length() < l_maxCharCount)
 						{
 							if (!GetAsyncKeyState(VK_LSHIFT))
 							{

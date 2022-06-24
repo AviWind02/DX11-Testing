@@ -3,7 +3,6 @@ inline char* StringToChar(std::string string); // Handy little thing
 
 namespace redMenu
 {
-	extern bool isMenuOpen;
 	class backend
 	{
 

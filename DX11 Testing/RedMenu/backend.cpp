@@ -5,10 +5,6 @@ namespace redMenu
 {
     backend* g_backend = new backend();
 
-    bool isMenuOpen = true;
-    bool MouseLock;
-    int currentOption = 1;
-    int OptionCount = 0;
     int SubMenuLevel;
     backend::SubMenu SubMenuArray[1000];
     int LastOption[999];

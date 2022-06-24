@@ -21,5 +21,5 @@ extern bool LeftKey();
 extern int KeyPressDelay, maxOption, maxOptionforTop, OptionCount, OptionCountforTopMenu, currentOptionforTopMenu, currentOption, OptionCountForBackGround;
  std::string KeyboardOnScreen();
 extern bool scrollTopMenu();
-
+extern bool isMenuOpen;
 extern Control* control;
