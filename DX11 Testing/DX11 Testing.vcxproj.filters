@@ -42,24 +42,6 @@
     <Filter Include="Header Files\TestLand\Control">
       <UniqueIdentifier>{b3f2f8d9-005d-469c-849f-709136941701}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\TestLand\RedMenu">
-      <UniqueIdentifier>{432fd3ba-3bbf-4e69-8e66-f2314d674a30}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\TestLand\RedMenu\backend">
-      <UniqueIdentifier>{0d46961e-a72f-4086-9446-ec1110b40400}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\TestLand\RedMenu\backend\UI">
-      <UniqueIdentifier>{74a154f7-dd15-4aa3-b193-ad4e298dfe1b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\TestLand\RedMenu\Frontend">
-      <UniqueIdentifier>{30a8c9e6-a5c0-48de-8d7a-9739f361ca19}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\TestLand\RedMenu\Frontend\Menu">
-      <UniqueIdentifier>{11547806-00a5-4307-a3da-2389ea367156}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\TestLand\RedMenu\Frontend\Options">
-      <UniqueIdentifier>{9274a0fb-6dfe-4445-ad19-0abfd7706c2d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\TestLand\Summer UI">
       <UniqueIdentifier>{e81cf532-3885-4b46-8864-c50409bbe4cd}</UniqueIdentifier>
     </Filter>
@@ -71,6 +53,9 @@
     </Filter>
     <Filter Include="Header Files\TestLand\Summer UI\GUI\frontend\Menu">
       <UniqueIdentifier>{fc4a69ec-d2e4-418e-8aeb-96141d7d0067}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestLand\Summer UI\GUI\backend">
+      <UniqueIdentifier>{96edea4e-0317-46f1-a58d-ec94196babf6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -104,23 +89,14 @@
     <ClCompile Include="Horizon.cpp">
       <Filter>Header Files\TestLand\Horizon UI</Filter>
     </ClCompile>
-    <ClCompile Include="RedMenu\backend.cpp">
-      <Filter>Header Files\TestLand\RedMenu\backend</Filter>
-    </ClCompile>
-    <ClCompile Include="RedMenu\UI.cpp">
-      <Filter>Header Files\TestLand\RedMenu\backend\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="RedMenu\Menu.cpp">
-      <Filter>Header Files\TestLand\RedMenu\Frontend\Menu</Filter>
-    </ClCompile>
-    <ClCompile Include="Options.cpp">
-      <Filter>Header Files\TestLand\RedMenu\Frontend\Options</Filter>
-    </ClCompile>
     <ClCompile Include="Summer UI\GUI.cpp">
       <Filter>Header Files\TestLand\Summer UI\GUI</Filter>
     </ClCompile>
     <ClCompile Include="Summer UI\Menu.cpp">
       <Filter>Header Files\TestLand\Summer UI\GUI\frontend\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Summer UI\backend.cpp">
+      <Filter>Header Files\TestLand\Summer UI\GUI\backend</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,23 +160,14 @@
     <ClInclude Include="Control.h">
       <Filter>Header Files\TestLand\Control</Filter>
     </ClInclude>
-    <ClInclude Include="RedMenu\backend.h">
-      <Filter>Header Files\TestLand\RedMenu\backend</Filter>
-    </ClInclude>
-    <ClInclude Include="RedMenu\UI.h">
-      <Filter>Header Files\TestLand\RedMenu\backend\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="RedMenu\Menu.h">
-      <Filter>Header Files\TestLand\RedMenu\Frontend\Menu</Filter>
-    </ClInclude>
-    <ClInclude Include="Options.h">
-      <Filter>Header Files\TestLand\RedMenu\Frontend\Options</Filter>
-    </ClInclude>
     <ClInclude Include="Summer UI\GUI.h">
       <Filter>Header Files\TestLand\Summer UI\GUI</Filter>
     </ClInclude>
     <ClInclude Include="Summer UI\Menu.h">
       <Filter>Header Files\TestLand\Summer UI\GUI\frontend\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Summer UI\backend.h">
+      <Filter>Header Files\TestLand\Summer UI\GUI\backend</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

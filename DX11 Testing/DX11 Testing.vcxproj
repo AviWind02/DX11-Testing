@@ -211,10 +211,7 @@
     <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Options.cpp" />
-    <ClCompile Include="RedMenu\backend.cpp" />
-    <ClCompile Include="RedMenu\Menu.cpp" />
-    <ClCompile Include="RedMenu\UI.cpp" />
+    <ClCompile Include="Summer UI\backend.cpp" />
     <ClCompile Include="Summer UI\GUI.cpp" />
     <ClCompile Include="Summer UI\Menu.cpp" />
   </ItemGroup>
@@ -235,13 +232,10 @@
     <ClInclude Include="NewUI\UI.h" />
     <ClInclude Include="Normal Menu.h" />
     <ClInclude Include="Normal UI.h" />
-    <ClInclude Include="Options.h" />
-    <ClInclude Include="RedMenu\backend.h" />
-    <ClInclude Include="RedMenu\Menu.h" />
-    <ClInclude Include="RedMenu\UI.h" />
     <ClInclude Include="Simple Menu.h" />
     <ClInclude Include="Simple UI.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Summer UI\backend.h" />
     <ClInclude Include="Summer UI\GUI.h" />
     <ClInclude Include="Summer UI\Menu.h" />
     <ClInclude Include="UI.h" />

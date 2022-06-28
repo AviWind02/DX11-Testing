@@ -1,15 +1,15 @@
 #include "IncludeFiles.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#include "RedMenu/Menu.h"
-#include "RedMenu/UI.h"
+#include "Summer UI/backend.h"
+#include "Summer UI/GUI.h"
 #pragma warning(disable : 4996).
 // Data
 static ID3D11Device* g_pd3dDevice = NULL;
 static ID3D11DeviceContext* g_pd3dDeviceContext = NULL;
 static IDXGISwapChain* g_pSwapChain = NULL;
 static ID3D11RenderTargetView* g_mainRenderTargetView = NULL;
-ImFont* m_font, *m_font_big;
+ImFont* m_font, *m_font_big, *m_font_title;
 
 // Forward declarations of helper functions
 bool CreateDeviceD3D(HWND hWnd);
@@ -65,14 +65,14 @@ bool LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** out_sr
 }
 bool LoadPic = true;
 ID3D11ShaderResourceView* my_texture = NULL;
-void Loadimage(const char* ID, const char* FilePath, ImVec2 Pos, ImVec2 Size)
+void Loadimage(const char* FilePath, ImVec2 Size)
 {
-   
-    int my_image_width = 0;
-    int my_image_height = 0;
-    bool ret = LoadTextureFromFile(FilePath, &my_texture, &my_image_width, &my_image_height);
-    IM_ASSERT(ret);
-
+    if (LoadPic)
+    {
+        int my_image_width = 0;
+        int my_image_height = 0;
+        bool ret = LoadTextureFromFile(FilePath, &my_texture, &my_image_width, &my_image_height);
+    }LoadPic = false;
     ImGui::Image((void*)my_texture, Size);
 }
 //extern void AstonTick();
@@ -117,7 +117,9 @@ int main()
     std::strcpy(font_cfg.Name, "Rubik");
     m_font = ImGui::GetIO().Fonts->AddFontFromMemoryTTF(const_cast<std::uint8_t*>(font_rubik), sizeof(font_rubik), 20.f, &font_cfg);
     m_font_big = ImGui::GetIO().Fonts->AddFontFromMemoryTTF(const_cast<std::uint8_t*>(font_rubik), sizeof(font_rubik), 25.f, &font_cfg);
+    m_font_title = ImGui::GetIO().Fonts->AddFontFromMemoryTTF(const_cast<std::uint8_t*>(font_rubik), sizeof(font_rubik), 40.f, &font_cfg);
 
+    
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
     // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
@@ -171,7 +173,9 @@ int main()
         //AstonTick();
        // blueUI->tick();
         //horizonTick();
-        redMenu::g_GUI->tick();
+        //redMenu::g_GUI->tick();
+        summer::g_GUI->tick();
+        
         // Rendering
         ImGui::Render();
         g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, NULL);

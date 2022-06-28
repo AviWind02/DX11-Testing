@@ -1,13 +1,11 @@
 #include "IncludeFiles.h"
-#include"RedMenu/backend.h"
-#include "RedMenu/UI.h"
-using namespace redMenu;
+#include "Summer UI/GUI.h"
 bool  Control::LeftPressed, Control::RightPressed, Control::SelectPressed, Control::LockMouse, Control::LockNumEdit;
-int KeyPressDelay = 150, maxOption = 10, maxOptionforTop = 3, OptionCount, OptionCountforTopMenu, currentOptionforTopMenu, currentOption, OptionCountForBackGround,
+int KeyPressDelay = 150, maxOption = 14, maxOptionforTop = 3, OptionCount, OptionCountforTopMenu, currentOptionforTopMenu, currentOption, OptionCountForBackGround,
 KeyPressDelayTickCount = GetTickCount64();
 Control* control = new Control();
 bool isMenuOpen = true;
-
+using namespace summer;
 bool MouseLock;
 inline char* StringToChar(std::string string) // Handy little thing
 {
@@ -147,7 +145,7 @@ bool Control::MouseClick(const char* text, ImVec2 pos, ImVec2 size, bool* out_ho
 {
     ImGuiWindow* window = ImGui::GetCurrentWindow();
     const ImGuiID id = window->GetID(text);
-    const ImRect bb(ImVec2(pos.x, pos.y), g_backend->add(&pos, &size));
+    const ImRect bb(ImVec2(pos.x, pos.y), g_GUI->add(&pos, &size));
     return ImGui::ButtonBehavior(bb, id, out_hovered, out_held);
 }
 
